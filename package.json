@@ -1,0 +1,13 @@
+{
+  "name": "@sds1/practica-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:node": "cd backend-node && pnpm start",
+    "start:python": "cd backend-python"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
