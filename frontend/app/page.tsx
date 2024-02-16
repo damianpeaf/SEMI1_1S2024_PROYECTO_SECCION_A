@@ -1,11 +1,13 @@
-import { Test } from "@/components/Test";
-import Image from "next/image";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { Link, Spacer } from "@nextui-org/react";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1>Hello World</h1>
-      <Test />
-    </main>
+    <section className="flex min-h-screen flex-col items-center mx-4 justify-center">
+      <h1 className="text-4xl font-bold mb-5">Login</h1>
+      <LoginForm />
+      <Spacer y={2} />
+      <Link href="/signup">{`No tienes cuenta? Regístrate`}</Link>
+    </section>
   );
 }
