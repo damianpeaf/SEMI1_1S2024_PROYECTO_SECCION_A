@@ -10,6 +10,7 @@ import { AppConfiguration } from './config/app/app-config.enum';
 import { AppConfigModule } from './config/app/app-config.module';
 import { DatabaseConfigModule } from './config/database/database-config.module';
 import { DatabaseConfigService } from './config/database/database-config.service';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DatabaseConfigService } from './config/database/database-config.service
     }),
     AuthModule,
     FilesModule,
+    CommonModule,
   ],
   providers: [FilesService],
 })
