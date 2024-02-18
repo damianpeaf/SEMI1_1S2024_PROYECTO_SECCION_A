@@ -20,8 +20,12 @@ export const RegisterSchema = z
     password: z
       .string()
       .min(4, { message: "La contraseña debe tener al menos 4 carácteres" }),
-    confirmPassword: z.string(),
-    profileImage: z.instanceof(File),
+    confirmPassword: z
+      .string()
+      .min(4, { message: "La contraseña debe tener al menos 4 carácteres" }),
+    profileImage: z
+      .any()
+      .refine((val) => val?.length > 0, "Imagen de perfil requerida"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Las contraseñas no coinciden",
@@ -100,7 +104,10 @@ export const SignupForm = () => {
         errorMessage={<>{errors.confirmPassword?.message}</>}
         {...register("confirmPassword")}
       />
-      <ImageInput control={control} name="profileImage" />
+      <ImageInput
+        {...register("profileImage")}
+        errorMessage={errors.profileImage?.message?.toString() || ""}
+      />
       <Button
         color="primary"
         className="w-full text-center font-medium text-lg"

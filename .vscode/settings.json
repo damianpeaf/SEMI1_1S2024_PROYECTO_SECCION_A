@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "node",
-        "db"
+        "db",
+        "frontend"
     ]
 }
