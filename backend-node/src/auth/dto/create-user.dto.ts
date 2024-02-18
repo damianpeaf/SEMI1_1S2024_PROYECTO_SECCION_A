@@ -10,5 +10,5 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
-  photo: File;
+  photo: Buffer;
 }
