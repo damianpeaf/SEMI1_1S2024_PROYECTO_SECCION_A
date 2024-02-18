@@ -1,0 +1,119 @@
+"use client";
+import {
+  Avatar,
+  Card,
+  Button,
+  CardBody,
+  Input,
+  CardHeader,
+} from "@nextui-org/react";
+import { PasswordInput } from "../forms/PasswordInput";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useApi } from "@/hooks/useApi";
+import { ImageInput } from "../forms/ImageInput";
+
+export const RegisterSchema = z
+  .object({
+    username: z.string().min(4, {
+      message: "El nombre de usuario debe tener al menos 4 carácteres",
+    }),
+    name: z
+      .string()
+      .min(2, { message: "El nombre debe tener al menos 2 carácteres" }),
+    password: z
+      .string()
+      .min(4, { message: "La contraseña debe tener al menos 4 carácteres" }),
+    confirmPassword: z
+      .string()
+      .min(4, { message: "La contraseña debe tener al menos 4 carácteres" }),
+    profileImage: z.any(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });
+
+type TRegisterSchema = z.infer<typeof RegisterSchema>;
+
+interface ProfileFormProps {
+  editable?: boolean;
+}
+
+export const ProfileForm = ({ editable = true }: ProfileFormProps) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    control,
+  } = useForm<TRegisterSchema>({
+    resolver: zodResolver(RegisterSchema),
+  });
+
+  const onSubmit: SubmitHandler<TRegisterSchema> = async (data) => {
+    console.log({
+      data,
+    });
+  };
+  return (
+    <Card className="py-4 w-full max-w-[28rem]">
+      <CardHeader className="py-2 px-4">
+        <h4 className="font-bold text-large w-full text-center">
+          Editar Perfil
+        </h4>
+      </CardHeader>
+      <CardBody className="overflow-visible py-2 flex flex-col gap-y-5">
+        <form
+          className="flex flex-col gap-y-4 w-full "
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Input
+            label="Username"
+            variant="bordered"
+            placeholder="jhondoe"
+            isInvalid={!!errors.username}
+            errorMessage={<>{errors.username?.message}</>}
+            {...register("username")}
+          />
+          <Input
+            label="Name"
+            variant="bordered"
+            placeholder="Jhon Doe"
+            isInvalid={!!errors.name}
+            errorMessage={<>{errors.name?.message}</>}
+            {...register("name")}
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="********"
+            variant="bordered"
+            isInvalid={!!errors.password}
+            errorMessage={<>{errors.password?.message}</>}
+            {...register("password")}
+          />
+          <PasswordInput
+            label="Confirm Password"
+            placeholder="********"
+            variant="bordered"
+            isInvalid={!!errors.confirmPassword}
+            errorMessage={<>{errors.confirmPassword?.message}</>}
+            {...register("confirmPassword")}
+          />
+          <ImageInput
+            {...register("profileImage")}
+            errorMessage={errors.profileImage?.message?.toString() || ""}
+          />
+          <Button
+            color="primary"
+            className="w-full text-center font-medium text-lg"
+            type="submit"
+          >
+            Guardar
+          </Button>
+        </form>
+      </CardBody>
+    </Card>
+  );
+};
