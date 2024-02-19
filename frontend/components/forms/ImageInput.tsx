@@ -6,11 +6,15 @@ import { RefCallBack } from "react-hook-form";
 interface ImageInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   ref: RefCallBack;
   errorMessage?: string;
+  preview?: {
+    size?: "sm" | "md" | "lg";
+    className?: string;
+  };
 }
 
 // eslint-disable-next-line react/display-name
 export const ImageInput = forwardRef<HTMLInputElement, ImageInputProps>(
-  ({ errorMessage, ...restProps }, ref) => {
+  ({ errorMessage, preview, ...restProps }, ref) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     return (
@@ -26,7 +30,7 @@ export const ImageInput = forwardRef<HTMLInputElement, ImageInputProps>(
             isBordered
             showFallback
             src={selectedFile ? URL.createObjectURL(selectedFile) : undefined}
-            size="lg"
+            size={preview?.size || "lg"}
             fallback={
               <CameraIcon
                 className="animate-pulse w-6 h-6 text-default-500"
@@ -36,6 +40,7 @@ export const ImageInput = forwardRef<HTMLInputElement, ImageInputProps>(
             color={
               selectedFile ? "primary" : errorMessage ? "danger" : "default"
             }
+            className={preview?.className}
           />
         </button>
         <div
@@ -64,6 +69,7 @@ export const ImageInput = forwardRef<HTMLInputElement, ImageInputProps>(
             restProps.onChange?.(e);
             const file = e?.target?.files && e.target.files[0];
             if (file) setSelectedFile(file);
+            else setSelectedFile(null);
           }}
         />
       </div>
