@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy-s3": "aws s3 rm s3://practica1-g6-paginaweb --recursive --profile sds1-s3 && aws s3 cp out/ s3://practica1-g6-paginaweb --recursive --profile sds1-s3"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -18,6 +19,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
+    "react-icons": "^5.0.1",
     "sonner": "^1.4.0",
     "zod": "^3.22.4"
   },
