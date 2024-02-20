@@ -10,18 +10,16 @@ import { AppConfiguration } from './config/app/app-config.enum';
 import { AppConfigModule } from './config/app/app-config.module';
 import { DatabaseConfigModule } from './config/database/database-config.module';
 import { DatabaseConfigService } from './config/database/database-config.service';
-import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
-    AppConfigModule,
     TypeOrmModule.forRootAsync({
       imports: [DatabaseConfigModule],
       useExisting: DatabaseConfigService,
     }),
     AuthModule,
     FilesModule,
-    CommonModule,
+    AppConfigModule,
   ],
   providers: [FilesService],
 })

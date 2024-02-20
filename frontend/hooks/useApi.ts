@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast as displayToast } from "sonner";
 
-const baseUrl = "http://localhost:3000";
+const baseUrl = "http://localhost:3001";
 
 interface UseApiConfig {
   endpointPath: string;

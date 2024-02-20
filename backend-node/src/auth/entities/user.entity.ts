@@ -1,22 +1,20 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('users')
-
+@Entity({ name: 'user' })
 export class User {
-    // nickname, name, password, photo
 
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('varchar', { length: 255, nullable: false })
-    nickname: string;
+    @Column('citext')
+    username: string;
 
     @Column('varchar', { length: 255, nullable: false })
     name: string;
 
-    @Column('varchar', { length: 255, nullable: false })
+    @Column('char', { length: 32, nullable: false })
     password: string;
 
-    @Column('bytea', { nullable: true })
-    photo: Buffer;
+    @Column('text', { nullable: true, name: 'photo_url' })
+    photoUrl: string;
 }

@@ -11,13 +11,15 @@ import { Repository } from 'typeorm';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { User } from './entities/user.entity';
 import { JwtPayload } from './interfaces';
+import { InjectRepository } from '@nestjs/typeorm';
+
 
 @Injectable()
 export class AuthService {
 
   constructor(
+    @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-
     private readonly jwtService: JwtService,
   ){}
 
@@ -50,10 +52,10 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto) {
     try {
-      const { password, nickname } = loginUserDto;
+      const { password, username } = loginUserDto;
 
       const user = await this.userRepository.findOne({
-        where: { nickname },
+        where: { username },
       })
 
       if (!user) {
