@@ -11,6 +11,6 @@ async function bootstrap() {
   });
 
   await app.listen(process.env.PORT || 3000);
-  logger.log(`Application listening on port ${process.env.PORT || 3000}`);
+  logger.log(`Application listening on port ${process.env.PORT || 3000}, NODE_ENV: ${process.env.NODE_ENV}`);
 }
 bootstrap();

@@ -12,6 +12,7 @@ import { CreateUserDto, LoginUserDto } from './dto';
 import { User } from './entities/user.entity';
 import { JwtPayload } from './interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
+import  { createHash } from 'crypto';
 
 
 @Injectable()
@@ -29,7 +30,7 @@ export class AuthService {
 
       const user = this.userRepository.create({
         ...userData,
-        password,
+        password: await this.encrypt(password),
       });
 
       await this.userRepository.save(user);
@@ -62,7 +63,8 @@ export class AuthService {
         throw new UnauthorizedException('El usuario no existe');
       }
 
-      if (user.password !== password) {
+      const encryptedPassword = await this.encrypt(password);
+      if (user.password !== encryptedPassword) {
         throw new UnauthorizedException('La contraseña es incorrecta');
       }
 
@@ -76,6 +78,9 @@ export class AuthService {
     }
   }
 
+  async encrypt(password: string) {
+    return createHash('md5').update(password, 'utf8').digest('hex');
+  }
 
   private handleDBErrors(error: any): never {
     if (error.code === '23505') throw new BadRequestException(error.detail);
