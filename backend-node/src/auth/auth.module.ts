@@ -9,6 +9,7 @@ import { AuthController } from './auth.controller';
 import { User } from './entities/user.entity';
 import { JwtStrategy } from './strategies/jwt-strategy';
 import JwtConfig from 'src/config/jwt/jwt-config';
+import { AlbumModule } from 'src/album/album.module';
 
 @Module({
   controllers: [AuthController],
@@ -33,7 +34,8 @@ import JwtConfig from 'src/config/jwt/jwt-config';
           }
         }
       }
-    })
+    }),
+    AlbumModule
   ],
   exports: [TypeOrmModule, JwtStrategy, PassportModule, JwtModule]
 })

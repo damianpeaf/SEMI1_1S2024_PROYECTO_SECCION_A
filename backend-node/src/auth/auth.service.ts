@@ -13,6 +13,8 @@ import { User } from './entities/user.entity';
 import { JwtPayload } from './interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
 import  { createHash } from 'crypto';
+import { AlbumService } from '../album/album.service';
+import { EAlbumType } from 'src/album/entities/album-type.entity';
 
 
 @Injectable()
@@ -22,18 +24,28 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly albumService: AlbumService,
   ){}
 
   async create(createUserDto: CreateUserDto) {
     try {
       const { password, ...userData } = createUserDto;
 
+      const encryptedPassword = await this.encrypt(password);
+      console.log(encryptedPassword, 'encryptedPassword');
+
       const user = this.userRepository.create({
         ...userData,
-        password: await this.encrypt(password),
+        password: encryptedPassword,
       });
 
       await this.userRepository.save(user);
+
+      await this.albumService.create({
+        album_type: EAlbumType.PROFILE,
+        name: 'Fotos de perfil',
+        user: +user.id,
+      })
 
       delete user.password;
 
