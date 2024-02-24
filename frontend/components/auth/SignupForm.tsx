@@ -54,17 +54,17 @@ export const SignupForm = () => {
     console.log({
       data,
     });
-    // const resp = await registerApi.call({
-    //   body: {
-    //     ...data,
-    //   },
-    //   successMessage: "Usuario registrado exitosamente",
-    //   errorMessage: ({ error }) => {
-    //     return `Error al registrar usuario. ${error}`;
-    //   },
-    // });
-    // if (!resp) return;
-    // reset();
+    const resp = await registerApi.call({
+      body: {
+        ...data,
+      },
+      successMessage: "Usuario registrado exitosamente",
+      errorMessage: ({ error }) => {
+        return `Error al registrar usuario. ${error.message}`;
+      },
+    });
+    if (!resp) return;
+    reset();
   };
 
   return (

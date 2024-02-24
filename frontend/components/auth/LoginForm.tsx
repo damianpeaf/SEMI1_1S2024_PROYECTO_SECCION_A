@@ -42,13 +42,6 @@ export const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<TLoginSchema> = async (data: TLoginSchema) => {
-    return login("token", {
-      id: 1,
-      username: "jhondoe",
-      name: "Jhon Doe",
-      password: "123456",
-      photo_url: "https://randomuser.me/api/portraits",
-    });
     const userInformation = await postLogin({
       body: data,
       errorMessage: ({ error }) => {
@@ -59,6 +52,8 @@ export const LoginForm = () => {
 
     if (!userInformation) return;
     reset();
+
+    login(userInformation.token, userInformation.user);
   };
 
   return (

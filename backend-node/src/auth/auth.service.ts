@@ -64,7 +64,6 @@ export class AuthService {
   }
 
   async login(loginUserDto: LoginUserDto) {
-    try {
       const { password, username } = loginUserDto;
 
       const user = await this.userRepository.findOne({
@@ -84,10 +83,6 @@ export class AuthService {
         ...user,
         token: this.getJwtToken({ id: user.id }),
       }
-
-    } catch (error) {
-      this.handleDBErrors(error);
-    }
   }
 
   async encrypt(password: string) {

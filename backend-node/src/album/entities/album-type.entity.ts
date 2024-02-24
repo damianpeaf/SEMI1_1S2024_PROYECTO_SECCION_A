@@ -1,4 +1,4 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 export enum EAlbumType {
     STANDARD = 1,
@@ -7,6 +7,7 @@ export enum EAlbumType {
 
 @Entity({ name: 'album_type' })
 export class AlbumType {
+    @PrimaryColumn()
     id: number;
     
     @Column('varchar', { length: 255, nullable: false })

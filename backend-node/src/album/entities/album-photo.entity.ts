@@ -11,6 +11,6 @@ export class AlbumPhoto {
     @Column('text', { nullable: false })
     url: string;
 
-    @Column('integer', { nullable: false })
-    album: string;
+    @Column('integer', { nullable: false, name: 'album' })
+    albumId: number;
 }
