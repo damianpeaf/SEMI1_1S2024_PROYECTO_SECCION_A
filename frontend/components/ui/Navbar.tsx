@@ -1,4 +1,5 @@
 "use client";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Navbar as NextUINavbar,
   NavbarBrand,
@@ -13,6 +14,8 @@ import {
 } from "@nextui-org/react";
 
 export const Navbar = () => {
+  const { logout } = useAuth();
+
   return (
     <NextUINavbar>
       <NavbarBrand>
@@ -56,7 +59,7 @@ export const Navbar = () => {
             <DropdownItem href="/profile" key="profile">
               Editar perfil
             </DropdownItem>
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="logout" color="danger" onClick={logout}>
               Log Out
             </DropdownItem>
           </DropdownMenu>

@@ -8,6 +8,7 @@ import { PasswordInput } from "@/components/forms/PasswordInput";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useApi } from "@/hooks/useApi";
 import { FullUser } from "@/types";
+import { useAuth } from "@/hooks/useAuth";
 
 const LoginSchema = z.object({
   username: z.string().min(4, {
@@ -30,6 +31,8 @@ export const LoginForm = () => {
     resolver: zodResolver(LoginSchema),
   });
 
+  const { login } = useAuth();
+
   const { call: postLogin } = useApi<{
     token: string;
     user: FullUser;
@@ -39,6 +42,13 @@ export const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<TLoginSchema> = async (data: TLoginSchema) => {
+    return login("token", {
+      id: 1,
+      username: "jhondoe",
+      name: "Jhon Doe",
+      password: "123456",
+      photo_url: "https://randomuser.me/api/portraits",
+    });
     const userInformation = await postLogin({
       body: data,
       errorMessage: ({ error }) => {
