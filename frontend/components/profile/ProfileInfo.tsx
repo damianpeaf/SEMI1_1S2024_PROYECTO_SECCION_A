@@ -1,8 +1,12 @@
+"use client";
+import { useAuth } from "@/hooks/useAuth";
 import { Card, CardBody, CardHeader, Image, Input } from "@nextui-org/react";
 
 interface ProfileInfoProps {}
 
 export const ProfileInfo = ({}: ProfileInfoProps) => {
+  const { auth } = useAuth();
+
   return (
     <Card className="py-4 max-w-[300px]">
       <CardHeader className="py-2 px-4">
@@ -14,11 +18,21 @@ export const ProfileInfo = ({}: ProfileInfoProps) => {
         <Image
           alt="Card background"
           className="object-cover rounded-xl"
-          src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
+          src={auth?.user.photoUrl}
           width={270}
         />
-        <Input label="Username" variant="bordered" readOnly value="mrjohndoe" />
-        <Input label="Name" variant="bordered" readOnly value="johndoe" />
+        <Input
+          label="Username"
+          variant="bordered"
+          readOnly
+          value={auth?.user.username}
+        />
+        <Input
+          label="Name"
+          variant="bordered"
+          readOnly
+          value={auth?.user.name}
+        />
       </CardBody>
     </Card>
   );

@@ -1,7 +1,5 @@
 {
-    "conventionalCommits.scopes": [
-        "node",
-        "db",
-        "frontend"
-    ]
+  "conventionalCommits.scopes": ["node", "db", "frontend"],
+  "files.eol": "\n",
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

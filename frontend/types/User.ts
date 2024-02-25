@@ -3,5 +3,5 @@ export type FullUser = {
   username: string;
   name: string;
   password: string;
-  photo_url: string;
+  photoUrl: string;
 };

@@ -1,3 +1,3 @@
 export enum AppConfiguration {
-    PORT = 'port',
+  PORT = 'port',
 }
