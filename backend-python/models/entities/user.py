@@ -1,5 +1,5 @@
 class User:
-    def __init__(self, id, username, name, password, photo_url):
+    def __init__(self, id=None, username=None, name=None, password=None, photo_url=None):
         self.id = id
         self.username = username
         self.name = name
@@ -8,9 +8,9 @@ class User:
 
     def to_json(self):
         return {
-            'id': self.id,
-            'username': self.username,
-            'name': self.name,
-            'password': self.password,
-            'photo_url': self.photo_url
+            "id": self.id,
+            "username": self.username,
+            "name": self.name,
+            "password": self.password,
+            "photo_url": self.photo_url,
         }
