@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast as displayToast } from "sonner";
+import { useAuth } from "./useAuth";
 
 const baseUrl = "http://localhost:3001";
 
@@ -20,6 +21,7 @@ type CallConfig<T> = {
   errorMessage?: ToastMessage<T>;
   authToken?: string;
   resourceId?: string;
+  formData?: boolean;
 };
 
 type CallFunction<T> = (config?: CallConfig<T>) => Promise<T | null>;
@@ -29,7 +31,7 @@ export const useApi = <T>({
   method = "GET",
   throwError = false,
 }: UseApiConfig) => {
-  const auth = { token: "123" };
+  const { auth } = useAuth();
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -41,6 +43,7 @@ export const useApi = <T>({
       params,
       authToken,
       resourceId,
+      formData,
     } = config || {};
     try {
       setLoading(true);
@@ -48,13 +51,16 @@ export const useApi = <T>({
       if (authToken) headers["auth-token"] = authToken;
       if (auth?.token) headers["auth-token"] = auth.token;
       if (method !== "GET") headers["Content-Type"] = "application/json";
+      if (formData) delete headers["Content-Type"]; //the browser will set the correct content type for us
 
       const options = {
         method,
         headers,
       } as RequestInit;
 
-      if (method !== "GET" && body) options.body = JSON.stringify(body);
+      if (method !== "GET" && body && !formData)
+        options.body = JSON.stringify(body);
+      if (method !== "GET" && body && formData) options.body = body;
 
       let url = `${baseUrl}/${endpointPath}`;
       if (resourceId) url = `${url}/${resourceId}`;

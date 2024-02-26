@@ -10,13 +10,14 @@ import { User } from './entities/user.entity';
 import { JwtStrategy } from './strategies/jwt-strategy';
 import JwtConfig from 'src/config/jwt/jwt-config';
 import { AlbumModule } from 'src/album/album.module';
+import { FileUploaderModule } from 'src/file-uploader/file-uploader.module';
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
   imports: [
     ConfigModule.forRoot({
-      load: [JwtConfig]
+      load: [JwtConfig],
     }),
 
     TypeOrmModule.forFeature([User]),
@@ -30,13 +31,14 @@ import { AlbumModule } from 'src/album/album.module';
         return {
           secret: configService.get('jwt.secret'),
           signOptions: {
-            expiresIn: configService.get('jwt.expiresIn')
-          }
-        }
-      }
+            expiresIn: configService.get('jwt.expiresIn'),
+          },
+        };
+      },
     }),
-    AlbumModule
+    AlbumModule,
+    FileUploaderModule,
   ],
-  exports: [TypeOrmModule, JwtStrategy, PassportModule, JwtModule]
+  exports: [TypeOrmModule, JwtStrategy, PassportModule, JwtModule],
 })
-export class AuthModule { }
+export class AuthModule {}

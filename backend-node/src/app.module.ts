@@ -11,6 +11,7 @@ import { AppConfigModule } from './config/app/app-config.module';
 import { DatabaseConfigModule } from './config/database/database-config.module';
 import { DatabaseConfigService } from './config/database/database-config.service';
 import { AlbumModule } from './album/album.module';
+import { FileUploaderModule } from './file-uploader/file-uploader.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AlbumModule } from './album/album.module';
     FilesModule,
     AppConfigModule,
     AlbumModule,
+    FileUploaderModule,
   ],
   providers: [FilesService],
 })
@@ -29,7 +31,6 @@ export class AppModule {
   static port: number;
 
   constructor(private readonly _configService: AppConfigService) {
-    AppModule.port = _configService.getAppConfig(AppConfiguration.PORT)
+    AppModule.port = _configService.getAppConfig(AppConfiguration.PORT);
   }
-
 }

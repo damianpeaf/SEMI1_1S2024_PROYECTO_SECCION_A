@@ -33,10 +33,7 @@ export const LoginForm = () => {
 
   const { login } = useAuth();
 
-  const { call: postLogin } = useApi<{
-    token: string;
-    user: FullUser;
-  }>({
+  const { call: postLogin } = useApi<FullUser & { token: string }>({
     endpointPath: "auth/login",
     method: "POST",
   });
@@ -53,7 +50,10 @@ export const LoginForm = () => {
     if (!userInformation) return;
     reset();
 
-    login(userInformation.token, userInformation.user);
+    const { token, ...user } = userInformation;
+    console.log(user);
+
+    login(userInformation.token, user);
   };
 
   return (

@@ -12,41 +12,55 @@ import { CreateUserDto, LoginUserDto } from './dto';
 import { User } from './entities/user.entity';
 import { JwtPayload } from './interfaces';
 import { InjectRepository } from '@nestjs/typeorm';
-import  { createHash } from 'crypto';
+import { createHash } from 'crypto';
 import { AlbumService } from '../album/album.service';
-import { EAlbumType } from 'src/album/entities/album-type.entity';
-
+import {
+  FileUploaderService,
+  ImagesFolders,
+} from 'src/file-uploader/file-uploader.service';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly albumService: AlbumService,
-  ){}
+    private readonly fileUploaderService: FileUploaderService,
+  ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto & { photo: Express.Multer.File }) {
+    const { password, ...userData } = createUserDto;
+    const profileUrl = await this.fileUploaderService.uploadImage(
+      userData.photo,
+      ImagesFolders.PROFILE,
+    );
+    if (!profileUrl)
+      throw new InternalServerErrorException(
+        'No se pudo subir la imagen de perfil',
+      );
+
     try {
-      const { password, ...userData } = createUserDto;
-
       const encryptedPassword = await this.encrypt(password);
-      console.log(encryptedPassword, 'encryptedPassword');
 
+      // 'INSERT INTO "user"("id", "username", "name", "password", "photo_url") VALUES (DEFAULT, DEFAULT, $1, $2, $3) RETURNING "id"',
       const user = this.userRepository.create({
         ...userData,
+        photoUrl: profileUrl,
         password: encryptedPassword,
       });
 
       await this.userRepository.save(user);
 
-      await this.albumService.create({
-        album_type: EAlbumType.PROFILE,
-        name: 'Fotos de perfil',
-        user: +user.id,
-      })
+      // This was comment out because it was not working
+      // it says: EntityMetadataNotFoundError: No metadata for "Album" was found.
+      // await this.albumService.create({
+      //   album_type: EAlbumType.PROFILE,
+      //   name: 'Fotos de perfil',
+      //   user: +user.id,
+      // });
 
+      // TODO: photo registration
       delete user.password;
 
       return {
@@ -55,34 +69,34 @@ export class AuthService {
         data: {
           ...user,
           token: this.getJwtToken({ id: user.id }),
-        }
-      }
-      
+        },
+      };
     } catch (error) {
       this.handleDBErrors(error);
     }
   }
 
   async login(loginUserDto: LoginUserDto) {
-      const { password, username } = loginUserDto;
+    const { password, username } = loginUserDto;
 
-      const user = await this.userRepository.findOne({
-        where: { username },
-      })
+    const user = await this.userRepository.findOne({
+      where: { username },
+    });
 
-      if (!user) {
-        throw new UnauthorizedException('El usuario no existe');
-      }
+    if (!user) {
+      throw new UnauthorizedException('El usuario no existe');
+    }
 
-      const encryptedPassword = await this.encrypt(password);
-      if (user.password !== encryptedPassword) {
-        throw new UnauthorizedException('La contraseña es incorrecta');
-      }
+    const encryptedPassword = await this.encrypt(password);
+    if (user.password !== encryptedPassword) {
+      throw new UnauthorizedException('La contraseña es incorrecta');
+    }
 
-      return {
-        ...user,
-        token: this.getJwtToken({ id: user.id }),
-      }
+    delete user.password;
+    return {
+      ...user,
+      token: this.getJwtToken({ id: user.id }),
+    };
   }
 
   async encrypt(password: string) {

@@ -46,7 +46,7 @@ export const SignupForm = () => {
   });
 
   const registerApi = useApi({
-    endpointPath: "auth/signup",
+    endpointPath: "auth/register",
     method: "POST",
   });
 
@@ -54,10 +54,16 @@ export const SignupForm = () => {
     console.log({
       data,
     });
+    // username, name, password, image as MultiPart
+    const formData = new FormData();
+    formData.append("username", data.username);
+    formData.append("name", data.name);
+    formData.append("password", data.password);
+    formData.append("image", data.profileImage[0]);
+
     const resp = await registerApi.call({
-      body: {
-        ...data,
-      },
+      body: formData,
+      formData: true,
       successMessage: "Usuario registrado exitosamente",
       errorMessage: ({ error }) => {
         return `Error al registrar usuario. ${error.message}`;

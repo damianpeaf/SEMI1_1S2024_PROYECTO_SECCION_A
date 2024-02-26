@@ -19,7 +19,9 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       password: this.getDatabaseConfig(DatabaseConfiguration.PASSWORD),
       database: this.getDatabaseConfig(DatabaseConfiguration.DATABASE),
       synchronize: this.getDatabaseConfig(DatabaseConfiguration.SYNCHRONIZE),
-      autoLoadEntities: this.getDatabaseConfig(DatabaseConfiguration.AUTOLOAD_ENTITIES),
+      autoLoadEntities: this.getDatabaseConfig(
+        DatabaseConfiguration.AUTOLOAD_ENTITIES,
+      ),
     };
   }
 
