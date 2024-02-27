@@ -25,7 +25,7 @@ class UserModel:
         except Exception as e:
             print(e)
             raise e
-    
+
     # Return the user if it exists, otherwise return None
     @classmethod
     def login_user(self, user: User):
@@ -40,20 +40,16 @@ class UserModel:
 
                 result = cursor.fetchone()
                 connection.close()
-            
+
             return result
 
         except Exception as e:
             print(e)
             raise e
-    
+
     @classmethod
     def update_user(self, user: User):
         try:
-            connection = get_connection()
-            
-            with connection.cursor() as cursor:
-                cursor.execute()
-        except Exception as e:
-            print(e)
-            raise e
+            pass
+        except Exception as ex:
+            raise Exception(ex)

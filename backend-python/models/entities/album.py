@@ -1,8 +1,3 @@
-class EAlbumType:
-    STANDARD = 1
-    PROFILE = 2
-
-
 class AlbumType:
     def __init__(self, id, name):
         self.id = id

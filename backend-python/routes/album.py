@@ -15,13 +15,13 @@ async def create_album(
 ):
     print(f"Album ID: {album_id}")
     print(f"Album Name: {data.name}")
-    
+
     return {
         "message": "Album created!",
         "status": 200,
     }
-    
-    
+
+
 @router.put("/album/{album_id}", response_model=dict, status_code=200)
 async def update_album(
     album_id: int,
@@ -29,12 +29,12 @@ async def update_album(
 ):
     print(f"Album ID: {album_id}")
     print(f"Album Name: {data.name}")
-    
+
     return {
         "message": "Album updated!",
         "status": 200,
     }
-    
+
 
 @router.get("/album/{album_id}", response_model=dict, status_code=200)
 async def get_album(
@@ -44,13 +44,13 @@ async def get_album(
         "name": "Album Name",
         "id": album_id,
     }
-    
+
     return {
         "message": "Album found!",
         "status": 200,
         "data": data,
     }
-    
+
 
 @router.delete("/album/{album_id}", response_model=dict, status_code=200)
 async def delete_album(
@@ -64,7 +64,7 @@ async def delete_album(
 
 @router.get("/albums", response_model=dict, status_code=200)
 async def get_albums():
-    
+
     return {
         "message": "Albums found!",
         "status": 200,
