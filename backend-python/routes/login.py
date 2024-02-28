@@ -49,7 +49,6 @@ async def login(data: LoginData):
         )
 
 
-# TODO: Implement logout
 @router.post("/logout", response_model=dict, status_code=200)
 async def logout():
     return {

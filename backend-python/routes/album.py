@@ -35,7 +35,8 @@ async def create_album(data: AlbumData, token: str = Depends(oauth2_scheme)):
             affected_rows = result.get("affected_rows")
 
             if affected_rows == 1:
-                return JSONResponse({"message": "Album created", "status": 200}, 200)
+                data = {"album_id": result.get("album_id")}
+                return JSONResponse({"message": "Album created", "status": 200, "data": data}, 200)
         else:
             return JSONResponse({"message": "Unauthorized", "status": 401}, 401)
 
@@ -80,8 +81,8 @@ async def get_album(album_id: int, token: str = Depends(oauth2_scheme)):
 
         if payload:
             result = AlbumModel.get_album(album_id, payload.get("id"))
-
             if result:
+                result = {"id": result.get("id"), "name": result.get("name"), "album_type": result.get("album_type")}
                 return JSONResponse(
                     {"message": "Album found", "status": 200, "data": result},
                     200,
@@ -93,7 +94,7 @@ async def get_album(album_id: int, token: str = Depends(oauth2_scheme)):
         return JSONResponse({"message": "Error getting album", "status": 500}, 500)
 
 
-# TODO: Delete the photos from the album
+# TODO: Delete only logical
 @router.delete("/album/{album_id}", response_model=dict, status_code=200)
 async def delete_album(album_id: int, token: str = Depends(oauth2_scheme)):
     try:
@@ -121,26 +122,28 @@ async def delete_album(album_id: int, token: str = Depends(oauth2_scheme)):
     return JSONResponse({"message": "Error deleting album", "status": 500}, 500)
 
 
-# TODO: Append the photos to the album data
+# TODO: Get albums with photos from query
 @router.get("/album", response_model=dict, status_code=200)
 async def get_albums(token: str = Depends(oauth2_scheme)):
     try:
         # Get JWT token
         payload = Security.check_token(token)
 
-        if payload:
+        if payload is not None:
             # Get albums
             albums = AlbumModel.get_all_albums(payload.get("id"))
 
             # Get photos for each album
             for album in albums:
-                album["photos"] = PhotoModel.get_all_photos(album["id"])
+                album["images"] = PhotoModel.get_all_photos(album["id"])
 
             return JSONResponse(
                 {
                     "message": "Albums found",
                     "status": 200,
-                    "data": albums,
+                    "data": {
+                        "albums:": albums, 
+                    },
                 },
                 200,
             )
@@ -150,4 +153,4 @@ async def get_albums(token: str = Depends(oauth2_scheme)):
     except Exception as e:
         print(e)
 
-    return JSONResponse({"message": "Error deleting album", "status": 500}, 500)
+    return JSONResponse({"message": "Error getting albums", "status": 500}, 500)
