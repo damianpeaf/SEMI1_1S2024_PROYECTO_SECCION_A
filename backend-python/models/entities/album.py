@@ -1,11 +1,8 @@
-class AlbumType:
-    def __init__(self, id, name):
-        self.id = id
-        self.name = name
+from enum import Enum
 
-    def to_json(self):
-        return {"id": self.id, "name": self.name}
-
+class AlbumType(Enum):
+    PROFILE = 1
+    STANDARD = 2
 
 class Album:
     def __init__(self, id, name, userid, album_type):
