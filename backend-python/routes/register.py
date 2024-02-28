@@ -1,11 +1,16 @@
 from fastapi import APIRouter, Form, UploadFile, File
 from fastapi.responses import JSONResponse
+from models.entities.album import Album
 
 # Entities
 from models.entities.user import User
+from models.entities.album import Album, AlbumType
+from models.entities.photo import Photo
 
 # Models
 from models.user_model import UserModel
+from models.album_model import AlbumModel
+from models.photo_model import PhotoModel
 
 # Utils
 from utils.encrypt import Encrypt
@@ -26,27 +31,32 @@ async def register(
 ):
 
     try:
-        # Upload photo to S3 and get the file url
-        file_location = f"Fotos_Perfil/{nickname}/{photo.filename}"
-        file_url = FileUploader.upload_photo(photo.file, file_location)
-
         encrypted_password = Encrypt.md5_encrypt(password)
 
-        user = User(0, nickname, name, encrypted_password, file_url)
-        affected_rows = UserModel.add_user(user)
-
-        if affected_rows == 1:
-            return {
-                "message": "Usuario registrado correctamente.",
-                "status": 200,
-            }
+        # Register user
+        new_user = User(0, nickname, name, encrypted_password, "")
+        res_user = UserModel.add_user(new_user)
+        
+        # Upload photo to S3 and get the file url
+        file_location = f"Fotos_Perfil/{res_user.get("user_id")}/{photo.filename}"
+        file_url = FileUploader.upload_photo(photo.file, file_location)
+        
+        # Update user photo url
+        new_user.id = res_user.get("user_id")
+        new_user.photo_url = file_url
+        UserModel.update_user(new_user)
+        
+        # Register album
+        res_album = AlbumModel.add_album(Album(0, "Fotos de perfil", res_user.get("user_id"), AlbumType.PROFILE.value))
+        
+        # Register user photo url
+        res_photo = PhotoModel.add_photo(Photo(0, photo.filename, file_url, res_album.get("album_id")))
+        
+        if res_user.get("affected_rows") == 1 and res_album.get("affected_rows") == 1 and res_photo.get("affected_rows") == 1:
+            return JSONResponse({"message": "Usuario registrado correctamente.", "status": 200,}, 200)
         else:
-            return JSONResponse(
-                content={"message": "Error en el registro", "status": 500},
-                status_code=500,
-            )
+            return JSONResponse({"message": "Error en el registro", "status": 500}, 500)
 
     except Exception as e:
-        return JSONResponse(
-            content={"message": "Error en el registro", "status": 500}, status_code=500
-        )
+        print(e)
+        return JSONResponse({"message": "Error en el registro", "status": 500}, 500)

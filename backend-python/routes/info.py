@@ -19,7 +19,7 @@ async def info(
     token: str = Depends(oauth2_scheme),
 ):
     # Validate token
-    payload = Security.verify_token({"Authorization": f"Bearer {token}"})
+    payload = Security.check_token(token)
 
     if payload:
         # Update user's info

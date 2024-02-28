@@ -12,15 +12,17 @@ class UserModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """INSERT INTO \"user\" (username, \"name\", \"password\", photo_url)
-                               VALUES (%s, %s, %s, %s)""",
+                               VALUES (%s, %s, %s, %s)
+                               RETURNING id;""",
                     (user.username, user.name, user.password, user.photo_url),
                 )
 
                 affected_rows = cursor.rowcount
+                user_id = cursor.fetchone()[0]
                 connection.commit()
 
             connection.close()
-            return affected_rows
+            return {"affected_rows": affected_rows, "user_id": user_id}
 
         except Exception as e:
             print(e)
@@ -50,6 +52,19 @@ class UserModel:
     @classmethod
     def update_user(self, user: User):
         try:
-            pass
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """UPDATE \"user\" SET username = %s, \"name\" = %s, \"password\" = %s, photo_url = %s
+                               WHERE id = %s""",
+                    (user.username, user.name, user.password, user.photo_url, user.id),
+                )
+
+                affected_rows = cursor.rowcount
+                connection.commit()
+
+            connection.close()
+            return affected_rows
         except Exception as ex:
             raise Exception(ex)
