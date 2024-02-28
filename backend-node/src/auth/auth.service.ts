@@ -17,7 +17,8 @@ import { AlbumService } from '../album/album.service';
 import {
   FileUploaderService,
   ImagesFolders,
-} from 'src/file-uploader/file-uploader.service';
+} from '../file-uploader/file-uploader.service';
+import { EAlbumType } from '../album/entities/album-type.entity';
 
 @Injectable()
 export class AuthService {
@@ -54,11 +55,11 @@ export class AuthService {
 
       // This was comment out because it was not working
       // it says: EntityMetadataNotFoundError: No metadata for "Album" was found.
-      // await this.albumService.create({
-      //   album_type: EAlbumType.PROFILE,
-      //   name: 'Fotos de perfil',
-      //   user: +user.id,
-      // });
+      await this.albumService.create({
+        album_type: EAlbumType.PROFILE,
+        name: 'Fotos de perfil',
+        user: +user.id,
+      });
 
       // TODO: photo registration
       delete user.password;

@@ -1,5 +1,6 @@
-import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
+@Entity({ name: 'album' })
 export class Album {
     @PrimaryGeneratedColumn()
     id: string;
@@ -12,4 +13,7 @@ export class Album {
 
     @Column('integer', { nullable: false })
     album_type: number;
+
+    @Column('date', { nullable: true })
+    deleted_at: string;
 }
