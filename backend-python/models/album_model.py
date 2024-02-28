@@ -12,35 +12,41 @@ class AlbumModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """INSERT INTO album (\"name\", \"user\", album_type)
-                               VALUES (%s, %s, %s)""",
+                               VALUES (%s, %s, %s)
+                               RETURNING id;""",
                     (str(album.name), int(album.userid), album.album_type),
                 )
 
                 affected_rows = cursor.rowcount
+                album_id = cursor.fetchone()[0]
                 connection.commit()
 
             connection.close()
-            return affected_rows
+            return {"affected_rows": affected_rows, "album_id": album_id}
         except Exception as e:
             print(e)
             raise e
 
     @classmethod
-    def get_album(cls, album: Album):
+    def get_album(cls, album_id, user_id):
         try:
             connection = get_connection()
 
             with connection.cursor() as cursor:
                 cursor.execute(
                     """SELECT * FROM album WHERE id = %s AND \"user\" = %s""",
-                    (int(album.id), int(album.userid)),
+                    (int(album_id), int(user_id)),
                 )
 
-                result = cursor.fetchone()
-                connection.commit()
+                row = cursor.fetchone()
+
+            album = None
+            if row is not None:
+                album = Album(row[0], row[1], row[2], row[3])
+                album = album.to_json()
 
             connection.close()
-            return result
+            return album
         except Exception as e:
             print(e)
             raise e

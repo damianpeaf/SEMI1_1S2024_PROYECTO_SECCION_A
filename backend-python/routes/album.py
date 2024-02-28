@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 # Models
 from models.album_model import AlbumModel
+from models.photo_model import PhotoModel
 
 # Entities
 from models.entities.album import Album, AlbumType
@@ -26,11 +27,12 @@ class AlbumData(BaseModel):
 async def create_album(data: AlbumData, token: str = Depends(oauth2_scheme)):
     try:
         # Get JWT token
-        payload = Security.verify_token({"Authorization": f"Bearer {token}"})
+        payload = Security.check_token(token)
         if payload:
             # Create album
             new_album = Album(0, data.name, payload.get("id"), AlbumType.STANDARD.value)
-            affected_rows = AlbumModel.add_album(new_album)
+            result = AlbumModel.add_album(new_album)
+            affected_rows = result.get("affected_rows")
 
             if affected_rows == 1:
                 return JSONResponse({"message": "Album created", "status": 200}, 200)
@@ -77,19 +79,11 @@ async def get_album(album_id: int, token: str = Depends(oauth2_scheme)):
         payload = Security.check_token(token)
 
         if payload:
-            album = Album(album_id, "", payload.get("id"), AlbumType.STANDARD.value)
-            result = AlbumModel.get_album(album)
+            result = AlbumModel.get_album(album_id, payload.get("id"))
 
             if result:
                 return JSONResponse(
-                    {
-                        "message": "Album found!",
-                        "status": 200,
-                        "data": {
-                            "id": result[0],
-                            "name": result[1],
-                        },
-                    },
+                    {"message": "Album found", "status": 200, "data": result},
                     200,
                 )
             else:
@@ -99,6 +93,7 @@ async def get_album(album_id: int, token: str = Depends(oauth2_scheme)):
         return JSONResponse({"message": "Error getting album", "status": 500}, 500)
 
 
+# TODO: Delete the photos from the album
 @router.delete("/album/{album_id}", response_model=dict, status_code=200)
 async def delete_album(album_id: int, token: str = Depends(oauth2_scheme)):
     try:
@@ -134,7 +129,12 @@ async def get_albums(token: str = Depends(oauth2_scheme)):
         payload = Security.check_token(token)
 
         if payload:
+            # Get albums
             albums = AlbumModel.get_all_albums(payload.get("id"))
+
+            # Get photos for each album
+            for album in albums:
+                album["photos"] = PhotoModel.get_all_photos(album["id"])
 
             return JSONResponse(
                 {

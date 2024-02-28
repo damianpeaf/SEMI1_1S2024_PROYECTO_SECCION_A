@@ -1,4 +1,4 @@
-class AlbumPhoto:
+class Photo:
     def __init__(self, id, name, url, album_id) -> None:
         self.id = id
         self.name = name
