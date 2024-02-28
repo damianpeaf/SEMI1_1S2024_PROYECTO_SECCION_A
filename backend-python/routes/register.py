@@ -24,33 +24,32 @@ router = APIRouter()
 # TODO: Upload photo to S3
 @router.post("/register", response_model=dict, status_code=200)
 async def register(
-    nickname: str = Form(...),
+    username: str = Form(...),
     name: str = Form(...),
     password: str = Form(...),
-    photo: UploadFile = File(...),
+    image: UploadFile = File(...),
 ):
-
     try:
         encrypted_password = Encrypt.md5_encrypt(password)
 
         # Register user
-        new_user = User(0, nickname, name, encrypted_password, "")
+        new_user = User(0, username, name, encrypted_password, "")
         res_user = UserModel.add_user(new_user)
         
         # Upload photo to S3 and get the file url
-        file_location = f"Fotos_Perfil/{res_user.get("user_id")}/{photo.filename}"
-        file_url = FileUploader.upload_photo(photo.file, file_location)
+        file_location = f"Fotos_Perfil/{res_user.get('user_id')}/{image.filename}"
+        file_url = FileUploader.upload_photo(image.file, file_location)
         
         # Update user photo url
-        new_user.id = res_user.get("user_id")
+        new_user.id = res_user.get('user_id')
         new_user.photo_url = file_url
         UserModel.update_user(new_user)
         
         # Register album
-        res_album = AlbumModel.add_album(Album(0, "Fotos de perfil", res_user.get("user_id"), AlbumType.PROFILE.value))
+        res_album = AlbumModel.add_album(Album(0, "Fotos de perfil", res_user.get('user_id'), AlbumType.PROFILE.value))
         
         # Register user photo url
-        res_photo = PhotoModel.add_photo(Photo(0, photo.filename, file_url, res_album.get("album_id")))
+        res_photo = PhotoModel.add_photo(Photo(0, image.filename, file_url, res_album.get("album_id")))
         
         if res_user.get("affected_rows") == 1 and res_album.get("affected_rows") == 1 and res_photo.get("affected_rows") == 1:
             return JSONResponse({"message": "Usuario registrado correctamente.", "status": 200,}, 200)
