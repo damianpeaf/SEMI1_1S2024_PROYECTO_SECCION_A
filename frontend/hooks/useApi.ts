@@ -2,7 +2,8 @@ import { useState } from "react";
 import { toast as displayToast } from "sonner";
 import { useAuth } from "./useAuth";
 
-const baseUrl = "http://localhost:3001";
+// const baseUrl = "http://localhost:3001";
+const baseUrl = "http://localhost:8000";
 
 interface UseApiConfig {
   endpointPath: string;
@@ -83,6 +84,7 @@ export const useApi = <T>({
       }
       return data;
     } catch (error) {
+      console.log({ error });
       if (!!errorMessage) {
         if (typeof errorMessage === "string") displayToast.error(errorMessage);
         else displayToast.error(errorMessage({ error }));

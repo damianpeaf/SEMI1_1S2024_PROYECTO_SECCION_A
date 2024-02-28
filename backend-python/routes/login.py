@@ -14,7 +14,7 @@ router = APIRouter()
 
 
 class LoginData(BaseModel):
-    nickname: str
+    username: str
     password: str
 
 
@@ -24,7 +24,7 @@ async def login(data: LoginData):
 
     # Validate credentials
     user = UserModel.login_user(
-        User(username=data.nickname, password=encrypted_password)
+        User(username=data.username, password=encrypted_password)
     )
 
     if user is None:
@@ -37,11 +37,11 @@ async def login(data: LoginData):
         token = Security.generate_token({"id": user[0]})
 
         data = {
-            "id": user[0],
-            "nickname": user[1],
+            "userid": user[0],
+            "username": user[1],
             "name": user[2],
-            "photo_url": user[4],
-            "token": token,
+            "image": user[4],
+            "jwt": token,
         }
         return JSONResponse(
             content={"message": "Autenticacion exitosa", "status": 200, "data": data},

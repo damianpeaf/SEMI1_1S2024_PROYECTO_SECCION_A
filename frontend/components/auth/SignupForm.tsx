@@ -46,7 +46,7 @@ export const SignupForm = () => {
   });
 
   const registerApi = useApi({
-    endpointPath: "auth/register",
+    endpointPath: "register",
     method: "POST",
   });
 

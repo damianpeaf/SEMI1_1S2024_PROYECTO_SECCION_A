@@ -95,8 +95,11 @@ export class AuthService {
 
     delete user.password;
     return {
-      ...user,
-      token: this.getJwtToken({ id: user.id }),
+      userid: user.id,
+      name: user.name,
+      username: user.username,
+      image: user.photoUrl,
+      jwt: this.getJwtToken({ id: user.id }),
     };
   }
 
