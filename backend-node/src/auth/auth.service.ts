@@ -19,6 +19,7 @@ import {
   ImagesFolders,
 } from '../file-uploader/file-uploader.service';
 import { EAlbumType } from '../album/entities/album-type.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -77,6 +78,84 @@ export class AuthService {
     }
   }
 
+  async update(updateUserDto: UpdateUserDto, token: string) {
+    // get id with token jwt
+    const payload = this.validateToken(token);
+    const userId = payload.id;
+
+    const { password, ...userData } = updateUserDto;
+
+    const encryptedPassword = password ? await this.encrypt(password) : null;
+
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('El usuario no existe');
+    }
+
+    const profileUrl = await this.fileUploaderService.uploadImage(
+      userData.photo,
+      ImagesFolders.PROFILE,
+    );
+
+
+    // update user
+
+    try {
+      await this.userRepository.update(
+        { id: userId },
+        {
+          ...userData,
+          photoUrl: profileUrl || user.photoUrl,
+          password: encryptedPassword || user.password,
+        },
+      );
+
+      const updatedUser = await this.userRepository.findOne({
+        where: { id: userId },
+      });
+
+      delete updatedUser.password;
+
+      return {
+        message: 'Usuario actualizado correctamente',
+        status: HttpStatus.OK,
+        data: {
+          ...updatedUser,
+          token: this.getJwtToken({ id: updatedUser.id }),
+        },
+      };
+    } catch (error) {
+      this.handleDBErrors(error);
+    }
+
+  }
+
+  async getUserInfo(token: string) {
+    const payload = this.validateToken(token);
+    const userId = payload.id;
+
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('El usuario no existe');
+    }
+
+    delete user.password;
+
+    return {
+      message: 'Usuario encontrado',
+      status: HttpStatus.OK,
+      data: {
+        ...user,
+      },
+    };
+  }
+
   async login(loginUserDto: LoginUserDto) {
     const { password, username } = loginUserDto;
 
@@ -104,6 +183,7 @@ export class AuthService {
   }
 
   async encrypt(password: string) {
+    if (!password) return null;
     return createHash('md5').update(password, 'utf8').digest('hex');
   }
 
@@ -118,4 +198,10 @@ export class AuthService {
   private getJwtToken(payload: JwtPayload) {
     return this.jwtService.sign(payload);
   }
+
+  public validateToken(token: string) {
+    return this.jwtService.verify(token, {
+        secret : process.env.JWT_SECRET_KEY
+    });
+}
 }
