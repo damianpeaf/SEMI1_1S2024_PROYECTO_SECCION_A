@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS citext;
 
-drop table if exists "user";
+drop table if exists "user" cascade;
 create table "user" (
     id serial primary key,
     username citext not null unique,
@@ -9,7 +9,7 @@ create table "user" (
     photo_url text
 );
 
-drop table if exists album_type;
+drop table if exists album_type cascade;
 create table album_type (
     id serial primary key,
     name varchar(255) not null
@@ -17,15 +17,16 @@ create table album_type (
 
 insert into album_type (name) values ('profile'), ('standard');
 
-drop table if exists album;
+drop table if exists album cascade;
 create table album (
     id serial primary key,
     name varchar(255) not null,
     "user" integer not null references "user"(id),
-    album_type integer not null references album_type(id)
+    album_type integer not null references album_type(id),
+    deleted_at timestamp default null
 );
 
-drop table if exists photo;
+drop table if exists photo cascade;
 create table photo (
     id serial primary key,
     name varchar(255) not null,
