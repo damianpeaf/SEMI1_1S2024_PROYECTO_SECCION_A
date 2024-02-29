@@ -68,7 +68,9 @@ export class AlbumService {
     return {
       message: 'Albums encontrados correctamente',
       status: HttpStatus.OK,
-      data: response
+      data: {
+        albums: response
+      }
     }
   
   }
