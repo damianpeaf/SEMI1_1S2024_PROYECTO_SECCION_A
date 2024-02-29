@@ -1,5 +1,6 @@
 from database.db import get_connection
 from .entities.user import User
+from .entities.album import Album
 
 
 class UserModel:
@@ -95,6 +96,30 @@ class UserModel:
                 connection.close()
 
             return result
+        except Exception as e:
+            print(e)
+            raise e
+        
+    @classmethod
+    def get_profile_album(cls, user_id):
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT * FROM album WHERE \"user\" = %s AND album_type = 1 AND deleted_at IS NULL""",
+                    (int(user_id),),
+                )
+
+                row = cursor.fetchone()
+
+            album = None
+            if row is not None:
+                album = Album(row[0], row[1], row[2], row[3])
+                album = album.to_json()
+
+            connection.close()
+            return album
         except Exception as e:
             print(e)
             raise e

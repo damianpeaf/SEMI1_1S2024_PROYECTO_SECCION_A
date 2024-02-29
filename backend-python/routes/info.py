@@ -2,6 +2,9 @@ import time
 from fastapi import APIRouter, Form, UploadFile, File, Depends
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
+from models.album_model import AlbumModel
+from models.entities.photo import Photo
+from models.photo_model import PhotoModel
 from utils.file_uploader import FileUploader
 
 # Models
@@ -39,6 +42,14 @@ async def info(
                     f"Fotos_Perfil/{image.filename}-{timestamp}-{user_id}.jpg"
                 )
                 file_url = FileUploader.upload_photo(image.file, file_location)
+                
+                # Register user photo url
+                profile_album = UserModel.get_profile_album(user_id)
+                profile_id = profile_album.get("id")
+                res_photo = PhotoModel.add_photo(
+                    Photo(0, image.filename, file_url, profile_id)
+                )
+                
 
             # Update user's info
             affected_rows = UserModel.update_user(user_id, name, username, file_url)
