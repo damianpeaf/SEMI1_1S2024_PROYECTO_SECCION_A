@@ -16,17 +16,17 @@ class PhotoModel:
                                RETURNING id;""",
                     (str(photo.name), str(photo.url), int(photo.album_id)),
                 )
-                
+
                 affected_rows = cursor.rowcount
                 photo_id = cursor.fetchone()[0]
                 connection.commit()
-                
+
             connection.close()
             return {"affected_rows": affected_rows, "photo_id": photo_id}
         except Exception as e:
             print(e)
             raise e
-        
+
     @classmethod
     def get_all_photos(cls, album_id: int):
         try:
@@ -34,7 +34,7 @@ class PhotoModel:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    """SELECT * FROM photo WHERE album = %s""",
+                    """SELECT id, name, url FROM photo WHERE album = %s""",
                     (int(album_id),),
                 )
 
@@ -42,7 +42,7 @@ class PhotoModel:
 
             photos = []
             for row in rows:
-                photo = Photo(row[0], row[1], row[2], row[3])
+                photo = Photo(row[0], row[1], row[2], album_id)
                 photos.append(photo.to_json())
 
             connection.close()

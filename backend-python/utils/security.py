@@ -18,13 +18,12 @@ class Security:
 
     @classmethod
     def check_token(cls, token):
-        try:
-            if len(token) > 0:
+        if len(token) > 0:
+            try:
                 payload = jwt.decode(token, cls.secret, algorithms=["HS256"])
                 return payload
-        except (jwt.ExpiredSignatureError, jwt.InvalidSignatureError) as e:
-            print(e)
-        except Exception as e:
-            print(e)
+            except (jwt.ExpiredSignatureError, jwt.InvalidSignatureError) as e:
+                print(e)
+                return None
 
-        return False
+        return None

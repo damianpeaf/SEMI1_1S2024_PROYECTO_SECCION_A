@@ -20,14 +20,16 @@ router = APIRouter()
 
 
 # TODO: Validate album_id
-@router.post("/album/{album_id}/photo", response_model=dict, status_code=200)
+@router.post("/photo", response_model=dict, status_code=200)
 async def upload_photo(
-    album_id: int,
-    photoName: str = Form(...),
+    name: str = Form(...),
     image: UploadFile = File(...),
+    album: str = Form(...),
     token: str = Depends(oauth2_scheme),
 ):
     try:
+        album = int(album)
+        
         # Get JWT token
         payload = Security.check_token(token)
 
@@ -36,11 +38,11 @@ async def upload_photo(
 
             # Upload photo to S3 and get the file url
             timestamp = int(time.time())
-            file_location = f"Fotos_Publicadas/{userid}/{photoName}_{timestamp}.jpg"
+            file_location = f"Fotos_Publicadas/{name}-{timestamp}-{userid}.jpg"
             file_url = FileUploader.upload_photo(image.file, file_location)
 
             # Register photo in the database
-            result = PhotoModel.add_photo(Photo(0, photoName, file_url, album_id))
+            result = PhotoModel.add_photo(Photo(0, name, file_url, album))
 
             affected_rows = result.get("affected_rows")
 
@@ -57,6 +59,3 @@ async def upload_photo(
     except Exception as e:
         print(e)
         return JSONResponse({"message": "Error uploading photo", "status": 500}, 500)
-
-
-# TODO: Get Method

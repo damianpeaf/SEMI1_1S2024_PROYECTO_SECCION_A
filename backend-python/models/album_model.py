@@ -34,7 +34,7 @@ class AlbumModel:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    """SELECT * FROM album WHERE id = %s AND \"user\" = %s""",
+                    """SELECT * FROM album WHERE id = %s AND \"user\" = %s AND deleted_at IS NULL""",
                     (int(album_id), int(user_id)),
                 )
 
@@ -58,7 +58,7 @@ class AlbumModel:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    """SELECT * FROM album WHERE \"user\" = %s""",
+                    """SELECT * FROM album WHERE \"user\" = %s AND deleted_at IS NULL""",
                     (int(userid),),
                 )
 
@@ -108,10 +108,10 @@ class AlbumModel:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    """DELETE FROM album WHERE id = %s AND \"user\" = %s""",
-                    (int(album.id), int(album.userid)),
+                    """ UPDATE album SET deleted_at = now()
+                        WHERE id = %s AND \"user\" = %s""", (int(album.id), int(album.userid))
                 )
-
+                
                 affected_rows = cursor.rowcount
                 connection.commit()
 

@@ -22,7 +22,8 @@ create table album (
     id serial primary key,
     name varchar(255) not null,
     "user" integer not null references "user"(id),
-    album_type integer not null references album_type(id)
+    album_type integer not null references album_type(id),
+    deleted_at timestamp default null
 );
 
 drop table if exists photo;

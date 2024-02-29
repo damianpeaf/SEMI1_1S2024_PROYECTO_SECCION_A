@@ -10,5 +10,5 @@ class Photo:
             "id": self.id,
             "name": self.name,
             "url": self.url,
-            "album_id": self.album_id,
+            "album": self.album_id,
         }
