@@ -12,6 +12,8 @@ import { EAlbumType } from '../album/entities/album-type.entity';
 import { AlbumService } from '../album/album.service';
 import { FileUploaderService, ImagesFolders } from '../file-uploader/file-uploader.service';
 import { JwtServiceLocal } from '../jwt/jwt.service';
+import { CreateUserWithPhoto } from './interfaces';
+import { AlbumPhotoService } from 'src/album/album-photo/album-photo.service';
 
 @Injectable()
 export class UserService {
@@ -20,12 +22,13 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly albumService: AlbumService,
+    private readonly photoService: AlbumPhotoService,
     private readonly jwtServiceLocal: JwtServiceLocal,
     private readonly fileUploaderService: FileUploaderService,
-  ) {}
+  ) { }
 
 
-  async create(createUserDto: CreateUserDto & { photo: Express.Multer.File }) {
+  async create(createUserDto: CreateUserWithPhoto) {
     const { password, ...userData } = createUserDto;
     const profileUrl = await this.fileUploaderService.uploadImage(
       userData.photo,
@@ -47,13 +50,19 @@ export class UserService {
 
       await this.userRepository.save(user);
 
-      await this.albumService.create({
+      const { data: newAlbum }  = await this.albumService.create({
         album_type: EAlbumType.PROFILE,
         name: 'Fotos de perfil',
         user: +user.id,
       });
 
-      // TODO: photo registration
+      this.photoService.create({
+        albumId: +newAlbum.id,
+        name: 'Foto de perfil',
+        url: profileUrl,
+      })
+
+
       delete user.password;
 
       return {

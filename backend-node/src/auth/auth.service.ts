@@ -8,10 +8,10 @@ import { Repository } from 'typeorm';
 
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
 
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { LoginUserDto } from './dto/login-user.dto';
+import { CreateUserWithPhoto } from 'src/user/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
     private readonly userService: UserService,
   ) { }
 
-  async register(createUserDto: CreateUserDto & { photo: Express.Multer.File }) {
+  async register(createUserDto: CreateUserWithPhoto) {
     return this.userService.create(createUserDto);
   }
 

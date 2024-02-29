@@ -7,10 +7,11 @@ import { AlbumModule } from '../album/album.module';
 import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 import { JwtServiceLocal } from 'src/jwt/jwt.service';
 import { JwtModuleLocal } from 'src/jwt/jwt.module';
+import { AlbumPhotoService } from 'src/album/album-photo/album-photo.service';
 
 @Module({
   controllers: [UserController],
-  providers: [UserService, JwtServiceLocal],
+  providers: [UserService, JwtServiceLocal, AlbumPhotoService],
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModuleLocal,
