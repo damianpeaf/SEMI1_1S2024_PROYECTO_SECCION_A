@@ -1,5 +1,6 @@
 from database.db import get_connection
 from .entities.user import User
+from .entities.album import Album
 
 
 class UserModel:
@@ -50,17 +51,28 @@ class UserModel:
             raise e
 
     @classmethod
-    def update_user(self, user: User):
+    def update_user(self, user_id, name=None, username=None, photo_url=None):
         try:
             connection = get_connection()
 
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """UPDATE \"user\" SET username = %s, \"name\" = %s, \"password\" = %s, photo_url = %s
-                               WHERE id = %s""",
-                    (user.username, user.name, user.password, user.photo_url, user.id),
-                )
-
+                query = "UPDATE \"user\" SET "
+                params = []
+                if name:
+                    query += "\"name\" = %s, "
+                    params.append(name)
+                if username:
+                    query += "username = %s, "
+                    params.append(username)
+                if photo_url:
+                    query += "photo_url = %s, "
+                    params.append(photo_url)
+                
+                query = query[:-2] + " WHERE id = %s"
+                params.append(user_id)
+                
+                cursor.execute(query, params)
+                    
                 affected_rows = cursor.rowcount
                 connection.commit()
 
@@ -68,3 +80,46 @@ class UserModel:
             return affected_rows
         except Exception as ex:
             raise Exception(ex)
+
+    @classmethod
+    def get_user(self, user_id):
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT * FROM \"user\" WHERE id = %s""",
+                    (user_id,),
+                )
+
+                result = cursor.fetchone()
+                connection.close()
+
+            return result
+        except Exception as e:
+            print(e)
+            raise e
+        
+    @classmethod
+    def get_profile_album(cls, user_id):
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT * FROM album WHERE \"user\" = %s AND album_type = 1 AND deleted_at IS NULL""",
+                    (int(user_id),),
+                )
+
+                row = cursor.fetchone()
+
+            album = None
+            if row is not None:
+                album = Album(row[0], row[1], row[2], row[3])
+                album = album.to_json()
+
+            connection.close()
+            return album
+        except Exception as e:
+            print(e)
+            raise e
