@@ -3,9 +3,6 @@ import { Repository } from 'typeorm';
 import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-
 import { User } from './entities/user.entity';
 import { EAlbumType } from '../album/entities/album-type.entity';
 
@@ -13,7 +10,7 @@ import { AlbumService } from '../album/album.service';
 import { FileUploaderService, ImagesFolders } from '../file-uploader/file-uploader.service';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { CreateUserWithPhoto, UpdateUserWithPhoto } from './interfaces';
-import { AlbumPhotoService } from 'src/album/album-photo/album-photo.service';
+import { PhotoService } from '../photo/photo.service';
 
 @Injectable()
 export class UserService {
@@ -22,7 +19,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly albumService: AlbumService,
-    private readonly photoService: AlbumPhotoService,
+    private readonly photoService: PhotoService,
     private readonly jwtServiceLocal: JwtServiceLocal,
     private readonly fileUploaderService: FileUploaderService,
   ) { }
@@ -78,7 +75,7 @@ export class UserService {
   }
 
   async findOne(token: string) {
-    const userId = this.getUserIdFromToken(token);
+    const userId = this.jwtServiceLocal.getUserIdFromToken(token);
 
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -101,7 +98,7 @@ export class UserService {
   }
 
   async update(updateUserDto: UpdateUserWithPhoto, token: string) {
-    const userId = this.getUserIdFromToken(token);
+    const userId = this.jwtServiceLocal.getUserIdFromToken(token);
 
     const { password, ...userData } = updateUserDto;
 
@@ -154,15 +151,7 @@ export class UserService {
     return `This action removes a #${id} user`;
   }
 
-  private getUserIdFromToken(token: string): string {
-
-    if (!token) {
-      throw new UnauthorizedException('No se ha enviado el token');
-    }
-
-    const payload = this.jwtServiceLocal.validateToken(token);
-    return payload.id;
-  }
+  
 
   private handleDBErrors(error: any): never {
     if (error.code === '23505') throw new BadRequestException(error.detail);

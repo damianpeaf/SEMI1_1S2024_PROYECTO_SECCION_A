@@ -10,6 +10,7 @@ import { UserService } from '../user/user.service';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 
 import { AuthController } from './auth.controller';
+import { PhotoModule } from '../photo/photo.module';
 
 
 @Module({
@@ -19,6 +20,7 @@ import { AuthController } from './auth.controller';
     AlbumModule,
     FileUploaderModule,
     UserModule,
+    PhotoModule,
     JwtModuleLocal,
   ],
 })

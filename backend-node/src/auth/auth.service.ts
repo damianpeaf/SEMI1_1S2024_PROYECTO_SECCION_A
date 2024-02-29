@@ -11,7 +11,7 @@ import { UserService } from '../user/user.service';
 
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import { CreateUserWithPhoto } from 'src/user/interfaces';
+import { CreateUserWithPhoto } from '../user/interfaces';
 
 @Injectable()
 export class AuthService {
