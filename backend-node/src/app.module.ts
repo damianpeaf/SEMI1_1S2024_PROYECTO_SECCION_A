@@ -12,6 +12,9 @@ import { DatabaseConfigModule } from './config/database/database-config.module';
 import { DatabaseConfigService } from './config/database/database-config.service';
 import { AlbumModule } from './album/album.module';
 import { FileUploaderModule } from './file-uploader/file-uploader.module';
+import { UserModule } from './user/user.module';
+import { JwtServiceLocal } from './jwt/jwt.service';
+import { JwtModuleLocal } from './jwt/jwt.module';
 
 @Module({
   imports: [
@@ -24,8 +27,10 @@ import { FileUploaderModule } from './file-uploader/file-uploader.module';
     AppConfigModule,
     AlbumModule,
     FileUploaderModule,
+    UserModule,
+    JwtModuleLocal,
   ],
-  providers: [FilesService],
+  providers: [FilesService, JwtServiceLocal],
 })
 export class AppModule {
   static port: number;
