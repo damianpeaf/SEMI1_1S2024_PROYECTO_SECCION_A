@@ -26,6 +26,9 @@ export class FileUploaderService {
   }
 
   async uploadFile(file: Express.Multer.File, path: string) {
+
+    if (!file) return null;
+
     const { originalname } = file;
     const location = path.trim().replace(/^\/+|\/+$/g, '') + `/${originalname}`;
 

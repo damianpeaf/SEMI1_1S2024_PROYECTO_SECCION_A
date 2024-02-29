@@ -12,7 +12,7 @@ import { EAlbumType } from '../album/entities/album-type.entity';
 import { AlbumService } from '../album/album.service';
 import { FileUploaderService, ImagesFolders } from '../file-uploader/file-uploader.service';
 import { JwtServiceLocal } from '../jwt/jwt.service';
-import { CreateUserWithPhoto } from './interfaces';
+import { CreateUserWithPhoto, UpdateUserWithPhoto } from './interfaces';
 import { AlbumPhotoService } from 'src/album/album-photo/album-photo.service';
 
 @Injectable()
@@ -26,7 +26,6 @@ export class UserService {
     private readonly jwtServiceLocal: JwtServiceLocal,
     private readonly fileUploaderService: FileUploaderService,
   ) { }
-
 
   async create(createUserDto: CreateUserWithPhoto) {
     const { password, ...userData } = createUserDto;
@@ -79,8 +78,7 @@ export class UserService {
   }
 
   async findOne(token: string) {
-    const payload = this.jwtServiceLocal.validateToken(token);
-    const userId = payload.id;
+    const userId = this.getUserIdFromToken(token);
 
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -97,18 +95,13 @@ export class UserService {
       status: HttpStatus.OK,
       data: {
         ...user,
+        token,
       },
     };
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
-
-  async update(updateUserDto: UpdateUserDto, token: string) {
-    // get id with token jwt
-    const payload = this.jwtServiceLocal.validateToken(token);
-    const userId = payload.id;
+  async update(updateUserDto: UpdateUserWithPhoto, token: string) {
+    const userId = this.getUserIdFromToken(token);
 
     const { password, ...userData } = updateUserDto;
 
@@ -126,10 +119,7 @@ export class UserService {
       userData.photo,
       ImagesFolders.PROFILE,
     );
-
-
-    // update user
-
+    
     try {
       await this.userRepository.update(
         { id: userId },
@@ -151,7 +141,7 @@ export class UserService {
         status: HttpStatus.OK,
         data: {
           ...updatedUser,
-          token: this.jwtServiceLocal.getJwtToken({ id: updatedUser.id }),
+          token
         },
       };
     } catch (error) {
@@ -162,6 +152,16 @@ export class UserService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  private getUserIdFromToken(token: string): string {
+
+    if (!token) {
+      throw new UnauthorizedException('No se ha enviado el token');
+    }
+
+    const payload = this.jwtServiceLocal.validateToken(token);
+    return payload.id;
   }
 
   private handleDBErrors(error: any): never {

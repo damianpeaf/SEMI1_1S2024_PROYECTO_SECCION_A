@@ -45,28 +45,4 @@ export class AuthController {
   login(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
   }
-
-  // @UseGuards(AuthGuard)
-  // @Patch('info')
-  // @UsePipes(new ValidationPipe({ transform: true }))
-  // @UseInterceptors(
-  //   FileInterceptor('image', {
-  //     storage: memoryStorage(),
-  //   }),
-  // )
-  // updateInfo(
-  //   @Body() updateUserDto: UpdateUserDto,
-  //   @UploadedFile(
-  //     new ParseFilePipe({
-  //       validators: [new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' })],
-  //     }),
-  //   )
-  //   photo: Express.Multer.File,
-  //   @Headers('authorization') token: string,
-  // ) {
-  //   return this.authService.update({
-  //     ...updateUserDto,
-  //     photo,
-  //   }, token);
-  // }
 }

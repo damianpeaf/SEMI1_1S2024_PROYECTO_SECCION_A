@@ -15,9 +15,15 @@ export class JwtServiceLocal {
     }
 
     public validateToken(token: string) {
-        return this.jwtService.verify(token, {
-            secret: process.env.JWT_SECRET_KEY
-        });
+        try {
+            const decodedToken = this.jwtService.verify(token, {
+                secret: process.env.JWT_SECRET_KEY
+              });
+              return decodedToken;
+        } catch (error) {
+            console.log('Error validating token', error);
+            return null;
+        }
     }
     
     async encrypt(password: string) {
