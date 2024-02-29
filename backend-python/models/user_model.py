@@ -1,7 +1,7 @@
 from database.db import get_connection
 from .entities.user import User
 from .entities.album import Album
-
+from utils.encrypt import Encrypt
 
 class UserModel:
 
@@ -51,7 +51,7 @@ class UserModel:
             raise e
 
     @classmethod
-    def update_user(self, user_id, name=None, username=None, photo_url=None):
+    def update_user(self, user_id, name=None, username=None, photo_url=None, password=None):
         try:
             connection = get_connection()
 
@@ -67,6 +67,9 @@ class UserModel:
                 if photo_url:
                     query += "photo_url = %s, "
                     params.append(photo_url)
+                if password:
+                    query += "\"password\" = %s, "
+                    params.append(Encrypt.md5_encrypt(password))
                 
                 query = query[:-2] + " WHERE id = %s"
                 params.append(user_id)

@@ -1,4 +1,5 @@
 import time
+from typing import Annotated, Optional
 from fastapi import APIRouter, Form, UploadFile, File, Depends
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
@@ -6,6 +7,8 @@ from models.album_model import AlbumModel
 from models.entities.photo import Photo
 from models.photo_model import PhotoModel
 from utils.file_uploader import FileUploader
+from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
+from pydantic import BaseModel
 
 # Models
 from models.user_model import UserModel
@@ -14,17 +17,16 @@ from models.user_model import UserModel
 from utils.security import Security
 
 router = APIRouter()
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
 
 # Description: This endpoint is used to update the user's information.
 @router.put("/info", response_model=dict, status_code=200)
 async def info(
-    name: str = Form(None),
-    username: str = Form(None),
-    image: UploadFile = File(None),
-    token: str = Depends(oauth2_scheme),
+    token:str = Depends(oauth2_scheme),
+    name: Optional[str] = Form(None),
+    username: Optional[str] = Form(None),
+    password: Optional[str] = Form(None),
+    image: Optional[UploadFile] = File(None),
 ):
     # Validate token
     payload = Security.check_token(token)
@@ -52,7 +54,7 @@ async def info(
                 
 
             # Update user's info
-            affected_rows = UserModel.update_user(user_id, name, username, file_url)
+            affected_rows = UserModel.update_user(user_id, name, username, file_url, password)
             
             # Check if the user's info was updated
             if affected_rows == 1:

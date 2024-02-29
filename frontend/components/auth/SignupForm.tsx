@@ -100,7 +100,8 @@ export const SignupForm = () => {
         variant="bordered"
         isInvalid={!!errors.password}
         errorMessage={<>{errors.password?.message}</>}
-        {...register("password")}
+        control={control}
+        name="password"
       />
       <PasswordInput
         label="Confirm Password"
@@ -108,7 +109,8 @@ export const SignupForm = () => {
         variant="bordered"
         isInvalid={!!errors.confirmPassword}
         errorMessage={<>{errors.confirmPassword?.message}</>}
-        {...register("confirmPassword")}
+        control={control}
+        name="confirmPassword"
       />
       <ImageInput
         {...register("profileImage")}

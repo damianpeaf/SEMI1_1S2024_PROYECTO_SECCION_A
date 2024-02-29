@@ -4,15 +4,15 @@ import { create } from "zustand";
 type Auth = {
   token: string;
   user: FullUser;
-  
 };
 
 type AuthState = {
   auth: Auth | null;
-  status: 'loading' |'authenticated' | 'unauthenticated';
+  status: "loading" | "authenticated" | "unauthenticated";
+  _userInfoChanged: boolean;
   login: (token: string, user: FullUser) => void;
   logout: () => void;
-  updateUser: (user: FullUser) => void;
+  userInfoChanged: () => void;
   getSession: () => void;
   getUser: () => FullUser | undefined | null;
 };
@@ -20,17 +20,13 @@ type AuthState = {
 export const useAuth = create<AuthState>((set, get) => ({
   auth: null,
   status: "loading",
-  login: (token: string, user: FullUser) => {
-    set(() => ({ auth: { token, user }, status: "authenticated"}));
-    localStorage.setItem("auth", JSON.stringify({ token, user }));
+  _userInfoChanged: false,
+  userInfoChanged: () => {
+    set(() => ({ _userInfoChanged: !get()._userInfoChanged }));
   },
-  updateUser(user) {
-    const auth = get().auth;
-    if (!auth) {
-      return;
-    }
-    set(() => ({ auth: { ...auth, user }, status: "authenticated" }));
-    localStorage.setItem("auth", JSON.stringify({ ...auth, user }));
+  login: (token: string, user: FullUser) => {
+    set(() => ({ auth: { token, user }, status: "authenticated" }));
+    localStorage.setItem("auth", JSON.stringify({ token, user }));
   },
   getSession: () => {
     set(() => ({ status: "loading", auth: null }));
@@ -41,7 +37,7 @@ export const useAuth = create<AuthState>((set, get) => ({
       const { token, user } = sessionObj;
       if (!token || !user) return;
       set(() => ({ auth: { token, user }, status: "authenticated" }));
-    }else{
+    } else {
       set(() => ({ status: "unauthenticated", auth: null }));
     }
   },

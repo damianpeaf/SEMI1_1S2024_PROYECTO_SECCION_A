@@ -7,7 +7,7 @@ import {
 } from "@nextui-org/react";
 import { Album } from "@/types/Album";
 import { useApi } from "@/hooks/useApi";
-import { AlbumForm } from "./AlbumForm";
+import { AlbumForm, TAlbumFormState } from "./AlbumForm";
 
 export type AlbumModalProps = {
   album: Album | null;
@@ -22,12 +22,24 @@ export const AlbumModal = ({
   ...modalProps
 }: AlbumModalProps) => {
   let albumModalTitle = album ? "Editar" : "Crear";
-  const endpointPath = album ? `album/update/${album.id}` : "album/publish";
+
+  const endpointPath = album ? `album/${album.id}` : "album";
 
   const { call: performAction } = useApi({
     endpointPath,
-    method: "POST",
+    method: album ? "PUT" : "POST",
   });
+
+  const onSubmit = async (data: TAlbumFormState) => {
+    const resp = await performAction({
+      body: data,
+      errorMessage: `No se pudo ${album ? "actualizar" : "crear"} el album`,
+      successMessage: `Album ${album ? "actualizado" : "creado"} correctamente`,
+    });
+    if (!resp) return;
+    if (onAction) onAction();
+    if (modalProps.onClose) modalProps.onClose();
+  };
 
   return (
     <Modal {...modalProps}>
@@ -41,7 +53,7 @@ export const AlbumModal = ({
               <AlbumForm
                 album={album}
                 onCancel={modalProps.onClose}
-                onAction={onAction}
+                onSubmit={onSubmit}
               />
             </ModalBody>
           </>

@@ -17,7 +17,6 @@ from models.photo_model import PhotoModel
 from utils.encrypt import Encrypt
 from utils.file_uploader import FileUploader
 
-
 router = APIRouter()
 
 

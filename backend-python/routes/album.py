@@ -142,7 +142,7 @@ async def get_albums(token: str = Depends(oauth2_scheme)):
                     "message": "Albums found",
                     "status": 200,
                     "data": {
-                        "albums:": albums, 
+                        "albums": albums, 
                     },
                 },
                 200,

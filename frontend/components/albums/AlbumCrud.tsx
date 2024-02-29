@@ -4,38 +4,70 @@ import { IoAdd } from "react-icons/io5";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import { Table } from "../ui/Table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlbumModal } from "./AlbumModal";
 import { Album } from "@/types/Album";
+import { useApi } from "@/hooks/useApi";
+import { ApiResponse } from "@/types/Api";
 
-const albumsData = [
-  {
-    id: 1,
-    name: "Album 1",
-  },
-  {
-    id: 2,
-    name: "Album 2",
-  },
-  {
-    id: 3,
-    name: "Album 3",
-  },
-];
+export interface GetAlbumResponseT {
+  albums: Albums[];
+}
+
+export interface Albums {
+  id: number;
+  name: string;
+  images: Image[];
+}
+
+export interface Image {
+  id: number;
+  name: string;
+  url: string;
+  album: number;
+}
 
 export const AlbumCrud = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAlbum, setSelectedAlbum] = useState<null | Album>(null);
+  const [selectedAlbum, setSelectedAlbum] = useState<null | Albums>(null);
+  const [albumsData, setAlbumsData] = useState<Albums[]>([]);
 
-  const handleDelete = (album: any) => {};
+  const getApi = useApi<ApiResponse<GetAlbumResponseT>>({
+    endpointPath: "album",
+    method: "GET",
+  });
+
+  const deleteApi = useApi({
+    endpointPath: "album",
+    method: "DELETE",
+  });
+
+  const getAlbums = async () => {
+    const resp = await getApi.call();
+    if (!resp) return;
+    setAlbumsData(resp?.data?.albums || []);
+  };
+
+  useEffect(() => {
+    getAlbums();
+  }, []);
+
+  const handleDelete = async (album: Albums) => {
+    const resp = await deleteApi.call({
+      resourceId: album.id.toString(),
+      errorMessage: "No se pudo eliminar el album",
+      successMessage: "Album eliminado correctamente",
+    });
+    if (!resp) return;
+    getAlbums();
+  };
   return (
     <>
       <AlbumModal
         isOpen={isOpen}
         scrollBehavior="outside"
         album={selectedAlbum}
-        // onOpenChange={onOpenChange}
-        // onAction={getAlbums}
+        onAction={getAlbums}
         onClose={() => setIsOpen(false)}
       />
       <Card
@@ -64,11 +96,11 @@ export const AlbumCrud = () => {
             headers={[
               {
                 title: "Nombre",
-                formatter: (album) => album.name,
+                formatter: (album: Albums) => album.name,
               },
               {
                 title: "Acciones",
-                formatter: (album) => (
+                formatter: (album: Albums) => (
                   <div className="flex justify-center gap-x-2">
                     <Button
                       color="warning"

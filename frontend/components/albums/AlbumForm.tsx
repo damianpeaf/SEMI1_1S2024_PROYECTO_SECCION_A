@@ -11,19 +11,23 @@ const AlbumSchema = z.object({
   name: z.string().nonempty({ message: "El nombre del libro es requerido" }),
 });
 
-type TAlbumFormState = z.infer<typeof AlbumSchema>;
+export type TAlbumFormState = z.infer<typeof AlbumSchema>;
 
 interface AlbumFormProps {
   album: AlbumI | null;
   onCancel?: () => void;
-  onAction?: () => void;
+  onSubmit?: (album: TAlbumFormState) => void;
 }
 
 const emptyAlbum: TAlbumFormState = {
   name: "",
 };
 
-export const AlbumForm = ({ album, onCancel, onAction }: AlbumFormProps) => {
+export const AlbumForm = ({
+  album,
+  onCancel,
+  onSubmit: outerSubmitHanlder,
+}: AlbumFormProps) => {
   const {
     handleSubmit,
     formState: { errors },
@@ -36,7 +40,7 @@ export const AlbumForm = ({ album, onCancel, onAction }: AlbumFormProps) => {
   });
 
   const onSubmit: SubmitHandler<TAlbumFormState> = (data) => {
-    console.log(data);
+    if (outerSubmitHanlder) outerSubmitHanlder(data);
   };
 
   return (

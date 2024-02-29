@@ -49,8 +49,8 @@ export const useApi = <T>({
     try {
       setLoading(true);
       const headers: HeadersInit = {};
-      if (authToken) headers["auth-token"] = authToken;
-      if (auth?.token) headers["auth-token"] = auth.token;
+      if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
+      if (auth?.token) headers["Authorization"] = `Bearer ${auth.token}`;
       if (method !== "GET") headers["Content-Type"] = "application/json";
       if (formData) delete headers["Content-Type"]; //the browser will set the correct content type for us
 

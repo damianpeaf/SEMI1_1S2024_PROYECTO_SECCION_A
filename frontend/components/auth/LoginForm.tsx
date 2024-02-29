@@ -28,6 +28,7 @@ export const LoginForm = () => {
     handleSubmit,
     reset,
     formState: { errors },
+    control,
   } = useForm<TLoginSchema>({
     resolver: zodResolver(LoginSchema),
   });
@@ -90,7 +91,8 @@ export const LoginForm = () => {
         variant="bordered"
         isInvalid={!!errors.password}
         errorMessage={<>{errors.password?.message}</>}
-        {...register("password")}
+        control={control}
+        name="password"
       />
 
       <Button

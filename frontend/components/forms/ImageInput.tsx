@@ -21,7 +21,8 @@ export const ImageInput = forwardRef<HTMLInputElement, ImageInputProps>(
       <div className="flex flex-col w-full justify-center items-center">
         <button
           className="flex gap-4 items-center cursor-pointer "
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             inputRef.current?.click();
           }}
         >
