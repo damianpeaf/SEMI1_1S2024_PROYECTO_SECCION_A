@@ -10,7 +10,7 @@ import { UserService } from '../user/user.service';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 
 import { AuthController } from './auth.controller';
-import { PhotoModule } from 'src/photo/photo.module';
+import { PhotoModule } from '../photo/photo.module';
 
 
 @Module({

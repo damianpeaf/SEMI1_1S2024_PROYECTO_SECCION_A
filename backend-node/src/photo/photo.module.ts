@@ -4,8 +4,8 @@ import { PhotoController } from './photo.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Photo } from './entities/photo.entity';
 import { JwtModuleLocal } from '../jwt/jwt.module';
-import { FileUploaderModule } from 'src/file-uploader/file-uploader.module';
-import { JwtServiceLocal } from 'src/jwt/jwt.service';
+import { FileUploaderModule } from '../file-uploader/file-uploader.module';
+import { JwtServiceLocal } from '../jwt/jwt.service';
 
 @Module({
   imports: [

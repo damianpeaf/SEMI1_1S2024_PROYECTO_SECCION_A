@@ -6,9 +6,9 @@ import { AlbumType } from './entities/album-type.entity';
 import { Album } from './entities/album.entity';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { JwtModuleLocal } from '../jwt/jwt.module';
-import { PhotoModule } from 'src/photo/photo.module';
-import { PhotoService } from 'src/photo/photo.service';
-import { FileUploaderModule } from 'src/file-uploader/file-uploader.module';
+import { PhotoModule } from '../photo/photo.module';
+import { PhotoService } from '../photo/photo.service';
+import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 
 @Module({
   imports: [

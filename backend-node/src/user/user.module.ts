@@ -7,7 +7,7 @@ import { AlbumModule } from '../album/album.module';
 import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { JwtModuleLocal } from '../jwt/jwt.module';
-import { PhotoModule } from 'src/photo/photo.module';
+import { PhotoModule } from '../photo/photo.module';
 
 @Module({
   controllers: [UserController],

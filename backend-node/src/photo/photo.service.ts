@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Photo } from './entities/photo.entity';
 import { CreatePhotoDto, CreatePhotoWithFile } from './dto/create-photo.dto';
-import { FileUploaderService, ImagesFolders } from 'src/file-uploader/file-uploader.service';
+import { FileUploaderService, ImagesFolders } from '../file-uploader/file-uploader.service';
 
 @Injectable()
 export class PhotoService {
