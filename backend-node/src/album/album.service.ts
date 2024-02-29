@@ -102,7 +102,16 @@ export class AlbumService {
    }
   }
 
-  remove(id: number) {
-    return this.albumRepository.softDelete(id);
+  remove(id: string, token: string) {
+    try {
+      const userId = this.jwtService.getUserIdFromToken(token);
+      this.albumRepository.softDelete({ id, user: +userId });
+      return {
+        message: 'Album eliminado correctamente',
+        status: HttpStatus.OK
+      }
+    } catch (error) {
+      throw new Error('No se pudo eliminar el album');
+    }
   }
 }

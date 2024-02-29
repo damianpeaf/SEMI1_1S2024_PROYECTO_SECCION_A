@@ -40,7 +40,9 @@ export class AlbumController {
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.albumService.remove(+id);
+  remove(
+    @Headers('Authorization') token: string,
+    @Param('id') id: string) {
+    return this.albumService.remove(id, token);
   }
 }
