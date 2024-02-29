@@ -14,6 +14,7 @@ import { UserModule } from './user/user.module';
 
 import { JwtServiceLocal } from './jwt/jwt.service';
 import { JwtModuleLocal } from './jwt/jwt.module';
+import { PhotoModule } from './photo/photo.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { JwtModuleLocal } from './jwt/jwt.module';
     FileUploaderModule,
     UserModule,
     JwtModuleLocal,
+    PhotoModule,
   ],
   providers: [JwtServiceLocal],
 })

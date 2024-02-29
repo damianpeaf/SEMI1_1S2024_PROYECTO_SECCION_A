@@ -2,20 +2,23 @@ import { Module } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { AlbumController } from './album.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AlbumPhoto } from './entities/album-photo.entity';
 import { AlbumType } from './entities/album-type.entity';
 import { Album } from './entities/album.entity';
-import { AlbumPhotoService } from './album-photo/album-photo.service';
-import { JwtServiceLocal } from 'src/jwt/jwt.service';
-import { JwtModuleLocal } from 'src/jwt/jwt.module';
+import { JwtServiceLocal } from '../jwt/jwt.service';
+import { JwtModuleLocal } from '../jwt/jwt.module';
+import { PhotoModule } from 'src/photo/photo.module';
+import { PhotoService } from 'src/photo/photo.service';
+import { FileUploaderModule } from 'src/file-uploader/file-uploader.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Album, AlbumType, AlbumPhoto]),
+    TypeOrmModule.forFeature([Album, AlbumType]),
     JwtModuleLocal,
+    PhotoModule,
+    FileUploaderModule,
   ],
   controllers: [AlbumController],
-  providers: [AlbumService, AlbumPhotoService, JwtServiceLocal],
-  exports: [AlbumService, TypeOrmModule, AlbumPhotoService]
+  providers: [AlbumService, JwtServiceLocal, PhotoService],
+  exports: [AlbumService, TypeOrmModule]
 })
 export class AlbumModule {}

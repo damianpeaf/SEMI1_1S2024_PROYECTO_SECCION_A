@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Headers }
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { AuthGuard } from 'src/jwt/guards/jwt-guard';
+import { AuthGuard } from '../jwt/guards/jwt-guard';
 
 @Controller('album')
 export class AlbumController {

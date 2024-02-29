@@ -5,8 +5,8 @@ import { Repository } from 'typeorm';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
-import { JwtServiceLocal } from 'src/jwt/jwt.service';
-import { AlbumPhotoService } from './album-photo/album-photo.service';
+import { JwtServiceLocal } from '../jwt/jwt.service';
+import { PhotoService } from '../photo/photo.service';
 
 @Injectable()
 export class AlbumService {
@@ -14,7 +14,7 @@ export class AlbumService {
   constructor(
     @InjectRepository(Album)
     private readonly albumRepository: Repository<Album>,
-    private readonly photoService: AlbumPhotoService,
+    private readonly photoService: PhotoService,
     private readonly jwtService: JwtServiceLocal
   ) { }
 
