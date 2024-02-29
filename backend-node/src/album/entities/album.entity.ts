@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'album' })
 export class Album {
@@ -14,6 +14,7 @@ export class Album {
     @Column('integer', { nullable: false })
     album_type: number;
 
+    @DeleteDateColumn({ nullable: true })
     @Column('date', { nullable: true })
-    deleted_at: string;
+    deleted_at: Date;
 }

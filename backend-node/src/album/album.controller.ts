@@ -8,9 +8,12 @@ import { AuthGuard } from 'src/jwt/guards/jwt-guard';
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.albumService.create(createAlbumDto);
+  create(
+    @Headers('Authorization') token: string,
+    @Body() createAlbumDto: CreateAlbumDto) {
+    return this.albumService.createAlbum(createAlbumDto, token);
   }
 
   @UseGuards(AuthGuard)
@@ -21,16 +24,21 @@ export class AlbumController {
     return this.albumService.findAll(token);
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.albumService.findOne(id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
-    return this.albumService.update(+id, updateAlbumDto);
+  update(
+    @Headers('Authorization') token: string,
+    @Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
+    return this.albumService.update(+id, updateAlbumDto, token);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.albumService.remove(+id);

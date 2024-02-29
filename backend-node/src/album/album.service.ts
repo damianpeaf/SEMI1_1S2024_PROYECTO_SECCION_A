@@ -18,16 +18,31 @@ export class AlbumService {
     private readonly jwtService: JwtServiceLocal
   ) { }
 
+
+  async createAlbum(createAlbumDto: {
+    name: string,
+    album_type: number
+  }, token: string) {
+    const userId = this.jwtService.getUserIdFromToken(token);
+    return await this.create({
+      ...createAlbumDto,
+      user: +userId
+    })    
+  }
+
   async create(createAlbumDto: CreateAlbumDto) {
 
-    const album = this.albumRepository.create(createAlbumDto);
-
-    await this.albumRepository.save(album);
-
-    return {
-      message: 'Album creado correctamente',
-      status: HttpStatus.OK,
-      data: album
+    try {
+      const album = this.albumRepository.create(createAlbumDto);
+      await this.albumRepository.save(album);
+      return {
+        message: 'Album creado correctamente',
+        status: HttpStatus.OK,
+        data: album
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error('No se pudo crear el album');
     }
   }
 
@@ -36,7 +51,7 @@ export class AlbumService {
 
     const albumsByUser = await this.albumRepository.find(
       {
-        where: { user: +userId }
+        where: { user: +userId, deleted_at: null }
       }
     );
 
@@ -60,15 +75,34 @@ export class AlbumService {
 
   async findOne(id: string) {
     return await this.albumRepository.findOne({
-      where: { id }
+      where: { id, deleted_at: null }
     });
   }
 
-  update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    return `This action updates a #${id} album`;
+  async update(id: number, updateAlbumDto: UpdateAlbumDto, token: string) {
+   try {
+    await this.albumRepository.update(id, updateAlbumDto);
+
+    const userId = this.jwtService.getUserIdFromToken(token);
+
+    const albumUpdated = await this.albumRepository.findOne(
+      {
+        where: { user: +userId, deleted_at: null, id: `${id}` }
+      }
+    );
+
+    return {
+      message: 'Album actualizado correctamente',
+      status: HttpStatus.OK,
+      data: albumUpdated
+    }
+
+   } catch (error) {
+      throw new Error('No se pudo actualizar el album');
+   }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} album`;
+    return this.albumRepository.softDelete(id);
   }
 }
