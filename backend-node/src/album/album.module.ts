@@ -13,6 +13,6 @@ import { AlbumPhotoService } from './album-photo/album-photo.service';
   ],
   controllers: [AlbumController],
   providers: [AlbumService, AlbumPhotoService],
-  exports: [AlbumService, TypeOrmModule]
+  exports: [AlbumService, TypeOrmModule, AlbumPhotoService]
 })
 export class AlbumModule {}
