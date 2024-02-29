@@ -44,7 +44,7 @@ async def register(
 
         # Update user photo url
         new_user.photo_url = file_url
-        UserModel.update_user(new_user)
+        UserModel.update_user(new_user.id, None, None, file_url)
 
         # Register album
         res_album = AlbumModel.add_album(

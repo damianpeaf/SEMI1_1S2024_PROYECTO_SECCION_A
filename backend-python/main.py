@@ -28,7 +28,7 @@ def read_root():
 
 app.include_router(login_router, prefix="/auth")
 app.include_router(register_router, prefix="/auth")
-app.include_router(info_router)
+app.include_router(info_router, prefix="/user")
 app.include_router(album_photo_router)
 app.include_router(album_router)
 
