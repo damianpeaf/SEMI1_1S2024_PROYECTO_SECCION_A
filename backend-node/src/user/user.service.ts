@@ -78,7 +78,7 @@ export class UserService {
   }
 
   async findOne(token: string) {
-    const userId = this.getUserIdFromToken(token);
+    const userId = this.jwtServiceLocal.getUserIdFromToken(token);
 
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -101,7 +101,7 @@ export class UserService {
   }
 
   async update(updateUserDto: UpdateUserWithPhoto, token: string) {
-    const userId = this.getUserIdFromToken(token);
+    const userId = this.jwtServiceLocal.getUserIdFromToken(token);
 
     const { password, ...userData } = updateUserDto;
 
@@ -154,15 +154,7 @@ export class UserService {
     return `This action removes a #${id} user`;
   }
 
-  private getUserIdFromToken(token: string): string {
-
-    if (!token) {
-      throw new UnauthorizedException('No se ha enviado el token');
-    }
-
-    const payload = this.jwtServiceLocal.validateToken(token);
-    return payload.id;
-  }
+  
 
   private handleDBErrors(error: any): never {
     if (error.code === '23505') throw new BadRequestException(error.detail);

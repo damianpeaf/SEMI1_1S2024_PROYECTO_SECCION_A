@@ -15,4 +15,10 @@ export class AlbumPhotoService {
     async create(createAlbumPhotoDto: CreateAlbumPhotoDto) {
         return await this.albumPhotoRepository.save(createAlbumPhotoDto);
     }
+
+    async findByAlbumId(albumId: number) {
+        return await this.albumPhotoRepository.find({
+            where: { albumId }
+        });
+    }
 }

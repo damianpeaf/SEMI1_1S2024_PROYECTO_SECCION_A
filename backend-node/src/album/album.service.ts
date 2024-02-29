@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
+import { JwtServiceLocal } from 'src/jwt/jwt.service';
+import { AlbumPhotoService } from './album-photo/album-photo.service';
 
 @Injectable()
 export class AlbumService {
@@ -12,6 +14,8 @@ export class AlbumService {
   constructor(
     @InjectRepository(Album)
     private readonly albumRepository: Repository<Album>,
+    private readonly photoService: AlbumPhotoService,
+    private readonly jwtService: JwtServiceLocal
   ) { }
 
   async create(createAlbumDto: CreateAlbumDto) {
@@ -27,8 +31,31 @@ export class AlbumService {
     }
   }
 
-  async findAll() {
-    return await this.albumRepository.find();
+  async findAll(token: string) {
+    const userId = this.jwtService.getUserIdFromToken(token);
+
+    const albumsByUser = await this.albumRepository.find(
+      {
+        where: { user: +userId }
+      }
+    );
+
+    const response = []
+
+    for (let i = 0; i < albumsByUser.length; i++) {
+      const photos = await this.photoService.findByAlbumId(+albumsByUser[i].id);
+      response.push({
+        ...albumsByUser[i],
+        photos
+      })
+    }
+
+    return {
+      message: 'Albums encontrados correctamente',
+      status: HttpStatus.OK,
+      data: response
+    }
+  
   }
 
   async findOne(id: string) {

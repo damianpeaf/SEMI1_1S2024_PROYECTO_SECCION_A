@@ -18,6 +18,6 @@ import { AlbumPhotoService } from 'src/album/album-photo/album-photo.service';
     AlbumModule,
     FileUploaderModule,
   ],
-  exports: [UserService, TypeOrmModule, JwtServiceLocal],
+  exports: [UserService, TypeOrmModule],
 })
 export class UserModule {}
