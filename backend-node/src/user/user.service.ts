@@ -139,13 +139,14 @@ export class UserService {
         },
       );
 
-      const profileAlbum = await this.albumService.getProfileAlbum(+userId);
-
-      await this.photoService.create({
-        album: profileAlbum.id,
-        name: 'Foto de perfil' + new Date().toISOString(),
-        url: profileUrl,
-      });
+      if (!profileUrl) {
+        const profileAlbum = await this.albumService.getProfileAlbum(+userId);
+        await this.photoService.create({
+          album: profileAlbum.id,
+          name: 'Foto de perfil' + new Date().toISOString(),
+          url: profileUrl,
+        });
+      }
 
       const updatedUser = await this.userRepository.findOne({
         where: { id: userId },
