@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
@@ -20,7 +17,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtServiceLocal: JwtServiceLocal,
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   async register(createUserDto: CreateUserWithPhoto) {
     return this.userService.create(createUserDto);
@@ -44,11 +41,15 @@ export class AuthService {
 
     delete user.password;
     return {
-      userid: user.id,
-      name: user.name,
-      username: user.username,
-      image: user.photoUrl,
-      jwt: this.jwtServiceLocal.getJwtToken({ id: user.id }),
+      message: 'Usuario logueado correctamente',
+      status: 200,
+      data: {
+        userid: user.id,
+        name: user.name,
+        username: user.username,
+        image: user.photoUrl,
+        jwt: this.jwtServiceLocal.getJwtToken({ id: user.id }),
+      },
     };
   }
 }

@@ -1,4 +1,13 @@
-import { Controller, Post, Body, UseGuards, UsePipes, ValidationPipe, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { PhotoService } from './photo.service';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { AuthGuard } from '../jwt/guards/jwt-guard';
@@ -7,7 +16,7 @@ import { memoryStorage } from 'multer';
 
 @Controller('photo')
 export class PhotoController {
-  constructor(private readonly photoService: PhotoService) { }
+  constructor(private readonly photoService: PhotoService) {}
 
   @UseGuards(AuthGuard)
   @Post()
@@ -19,7 +28,7 @@ export class PhotoController {
   )
   create(
     @Body() createPhotoDto: CreatePhotoDto,
-    @UploadedFile() photo: Express.Multer.File
+    @UploadedFile() photo: Express.Multer.File,
   ) {
     return this.photoService.createPhoto({
       ...createPhotoDto,

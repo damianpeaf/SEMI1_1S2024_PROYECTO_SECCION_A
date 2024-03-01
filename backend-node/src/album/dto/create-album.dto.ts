@@ -1,12 +1,12 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateAlbumDto {
-    @IsString()
-    name: string;
+  @IsString()
+  name: string;
 
-    @IsNumber()
-    user: number;
+  @IsNumber()
+  user: number;
 
-    @IsNumber()
-    album_type: number;
+  @IsNumber()
+  album_type: number;
 }

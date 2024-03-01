@@ -8,7 +8,12 @@ import {
   UseGuards,
   Headers,
   Put,
-  UsePipes, ValidationPipe, UseInterceptors, UploadedFile, ParseFilePipe, FileTypeValidator
+  UsePipes,
+  ValidationPipe,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -17,7 +22,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @UseGuards(AuthGuard)
   @Get('info')
@@ -44,10 +49,13 @@ export class UserController {
     )
     photo?: Express.Multer.File,
   ) {
-    return this.userService.update({
-      ...updateUserDto,
-      photo,
-    }, token);
+    return this.userService.update(
+      {
+        ...updateUserDto,
+        photo,
+      },
+      token,
+    );
   }
 
   @Delete(':id')

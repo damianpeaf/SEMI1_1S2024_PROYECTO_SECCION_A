@@ -1,16 +1,16 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'photo' })
 export class Photo {
-    @PrimaryGeneratedColumn()
-    id: string;
+  @PrimaryGeneratedColumn()
+  id: string;
 
-    @Column('varchar', { length: 255, nullable: false })
-    name: string;
+  @Column('varchar', { length: 255, nullable: false })
+  name: string;
 
-    @Column('text', { nullable: false })
-    url: string;
+  @Column('text', { nullable: false })
+  url: string;
 
-    @Column('integer', { nullable: false, name: 'album' })
-    albumId: number;
+  @Column('integer', { nullable: false, name: 'album' })
+  album: number;
 }

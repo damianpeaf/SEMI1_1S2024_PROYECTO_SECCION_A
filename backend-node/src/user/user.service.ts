@@ -1,20 +1,28 @@
 import { Repository } from 'typeorm';
 
-import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { User } from './entities/user.entity';
 import { EAlbumType } from '../album/entities/album-type.entity';
 
 import { AlbumService } from '../album/album.service';
-import { FileUploaderService, ImagesFolders } from '../file-uploader/file-uploader.service';
+import {
+  FileUploaderService,
+  ImagesFolders,
+} from '../file-uploader/file-uploader.service';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { CreateUserWithPhoto, UpdateUserWithPhoto } from './interfaces';
 import { PhotoService } from '../photo/photo.service';
 
 @Injectable()
 export class UserService {
-
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -22,7 +30,7 @@ export class UserService {
     private readonly photoService: PhotoService,
     private readonly jwtServiceLocal: JwtServiceLocal,
     private readonly fileUploaderService: FileUploaderService,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserWithPhoto) {
     const { password, ...userData } = createUserDto;
@@ -46,18 +54,17 @@ export class UserService {
 
       await this.userRepository.save(user);
 
-      const { data: newAlbum }  = await this.albumService.create({
+      const { data: newAlbum } = await this.albumService.create({
         album_type: EAlbumType.PROFILE,
         name: 'Fotos de perfil',
         user: +user.id,
       });
 
       this.photoService.create({
-        albumId: +newAlbum.id,
-        name: 'Foto de perfil',
+        album: newAlbum.id,
+        name: 'Foto de perfil' + new Date().toISOString(),
         url: profileUrl,
-      })
-
+      });
 
       delete user.password;
 
@@ -92,6 +99,8 @@ export class UserService {
       status: HttpStatus.OK,
       data: {
         ...user,
+        photoUrl: undefined,
+        imageUrl: user.photoUrl,
         token,
       },
     };
@@ -102,7 +111,9 @@ export class UserService {
 
     const { password, ...userData } = updateUserDto;
 
-    const encryptedPassword = password ? await this.jwtServiceLocal.encrypt(password) : null;
+    const encryptedPassword = password
+      ? await this.jwtServiceLocal.encrypt(password)
+      : null;
 
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -116,16 +127,25 @@ export class UserService {
       userData.photo,
       ImagesFolders.PROFILE,
     );
-    
+
     try {
       await this.userRepository.update(
         { id: userId },
         {
-          ...userData,
+          name: userData.name || user.name,
+          username: userData.username || user.username,
           photoUrl: profileUrl || user.photoUrl,
           password: encryptedPassword || user.password,
         },
       );
+
+      const profileAlbum = await this.albumService.getProfileAlbum(+userId);
+
+      await this.photoService.create({
+        album: profileAlbum.id,
+        name: 'Foto de perfil' + new Date().toISOString(),
+        url: profileUrl,
+      });
 
       const updatedUser = await this.userRepository.findOne({
         where: { id: userId },
@@ -138,20 +158,17 @@ export class UserService {
         status: HttpStatus.OK,
         data: {
           ...updatedUser,
-          token
+          token,
         },
       };
     } catch (error) {
       this.handleDBErrors(error);
     }
-
   }
 
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
-
-  
 
   private handleDBErrors(error: any): never {
     if (error.code === '23505') throw new BadRequestException(error.detail);

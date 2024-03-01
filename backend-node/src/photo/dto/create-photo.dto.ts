@@ -1,16 +1,13 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
 export class CreatePhotoDto {
-    @IsString()
-    name: string;
+  @IsString()
+  name: string;
 
-    @IsString()
-    url: string;
-
-    @IsNumber()
-    albumId: number;
+  @IsString()
+  album: string;
 }
 
 export interface CreatePhotoWithFile extends CreatePhotoDto {
-    photo: Express.Multer.File;
+  photo: Express.Multer.File;
 }

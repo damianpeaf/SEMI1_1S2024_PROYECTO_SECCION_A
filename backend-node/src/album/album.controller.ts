@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Headers } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  Headers,
+  Put,
+} from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -12,15 +22,14 @@ export class AlbumController {
   @Post()
   create(
     @Headers('Authorization') token: string,
-    @Body() createAlbumDto: CreateAlbumDto) {
+    @Body() createAlbumDto: CreateAlbumDto,
+  ) {
     return this.albumService.createAlbum(createAlbumDto, token);
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  findAll(
-    @Headers('Authorization') token: string
-  ) {
+  findAll(@Headers('Authorization') token: string) {
     return this.albumService.findAll(token);
   }
 
@@ -31,18 +40,18 @@ export class AlbumController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch(':id')
+  @Put(':id')
   update(
     @Headers('Authorization') token: string,
-    @Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
+    @Param('id') id: string,
+    @Body() updateAlbumDto: UpdateAlbumDto,
+  ) {
     return this.albumService.update(+id, updateAlbumDto, token);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(
-    @Headers('Authorization') token: string,
-    @Param('id') id: string) {
+  remove(@Headers('Authorization') token: string, @Param('id') id: string) {
     return this.albumService.remove(id, token);
   }
 }
