@@ -39,6 +39,8 @@
 
 <img src="./assets/9.jpg" alt="drawing" width="200"/>
 
+[DNS de el balanceador de cargas](http://balanceador-sds1-793954245.us-east-1.elb.amazonaws.com/check)
+
 ### Base de datos RDS
 
 - Instancia de base de datos
@@ -51,6 +53,8 @@
 
 <img src="./assets/12.png" alt="drawing" width="200"/>
 
+
+[Link de la página web](http://practica1-g6-paginaweb.s3-website-us-east-1.amazonaws.com/dashboard/)
 
 ### IAM
 
