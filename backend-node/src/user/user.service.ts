@@ -139,7 +139,7 @@ export class UserService {
         },
       );
 
-      if (!profileUrl) {
+      if (profileUrl) {
         const profileAlbum = await this.albumService.getProfileAlbum(+userId);
         await this.photoService.create({
           album: profileAlbum.id,
