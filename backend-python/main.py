@@ -35,6 +35,9 @@ app.add_middleware(
 def read_root():
     return {"msg": "root"}
 
+@app.get("/check")
+def read_root():
+    return {"msg": "OK"}
 
 app.include_router(login_router, prefix="/auth")
 app.include_router(register_router, prefix="/auth")

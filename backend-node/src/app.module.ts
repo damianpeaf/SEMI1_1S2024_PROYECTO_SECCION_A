@@ -15,6 +15,7 @@ import { UserModule } from './user/user.module';
 import { JwtServiceLocal } from './jwt/jwt.service';
 import { JwtModuleLocal } from './jwt/jwt.module';
 import { PhotoModule } from './photo/photo.module';
+import { DefaultController } from './default/default.controller';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PhotoModule } from './photo/photo.module';
     PhotoModule,
   ],
   providers: [JwtServiceLocal],
+  controllers: [DefaultController],
 })
 export class AppModule {
   static port: number;
