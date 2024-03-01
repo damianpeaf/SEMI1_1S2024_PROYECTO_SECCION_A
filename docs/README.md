@@ -15,6 +15,11 @@
 
 ### Diagrama de la arquitectura	
 
+<img src="./assets/0.png" alt="drawing" width="500" />
+
+Se accede a la app web pública que está alojada en un bucket S3, posteriormente el balanceador de carga envia las peticiones a alguna de las APIs que están alojadas en instancias EC2; las cuales se encargan de procesar la petición y, según lo requerido, obtienen, escriben o manipulan información en la base de datos, así como también crean u obtienen imagenes del bucket dedicado a las imagenes.
+
+
 ### Buckets de S3
 
 - Listado de folders en el bucket
