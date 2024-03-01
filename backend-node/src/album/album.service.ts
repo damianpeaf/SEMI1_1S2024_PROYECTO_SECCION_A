@@ -35,7 +35,6 @@ export class AlbumService {
     try {
       const album = this.albumRepository.create({
         ...createAlbumDto,
-        album_type: 2,
       });
       await this.albumRepository.save(album);
       return {
@@ -83,7 +82,7 @@ export class AlbumService {
 
   async getProfileAlbum(userId: number) {
     return await this.albumRepository.findOne({
-      where: { user: userId, album_type: 2, deleted_at: null },
+      where: { user: userId, album_type: 1, deleted_at: null },
     });
   }
 

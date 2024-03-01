@@ -1,0 +1,11 @@
+[Unit]
+Description=Tu aplicación FastAPI
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/home/ubuntu/.local/bin/uvicorn main:app --host 0.0.0.0 --port 3001
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

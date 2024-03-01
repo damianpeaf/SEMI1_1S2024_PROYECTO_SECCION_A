@@ -1,15 +1,15 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 export enum EAlbumType {
-    STANDARD = 1,
-    PROFILE = 2,
+  PROFILE = 1,
+  STANDARD = 2,
 }
 
 @Entity({ name: 'album_type' })
 export class AlbumType {
-    @PrimaryColumn()
-    id: number;
-    
-    @Column('varchar', { length: 255, nullable: false })
-    name: string;
+  @PrimaryColumn()
+  id: number;
+
+  @Column('varchar', { length: 255, nullable: false })
+  name: string;
 }

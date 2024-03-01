@@ -13,6 +13,7 @@ import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AuthGuard } from '../jwt/guards/jwt-guard';
+import { EAlbumType } from './entities/album-type.entity';
 
 @Controller('album')
 export class AlbumController {
@@ -24,7 +25,13 @@ export class AlbumController {
     @Headers('Authorization') token: string,
     @Body() createAlbumDto: CreateAlbumDto,
   ) {
-    return this.albumService.createAlbum(createAlbumDto, token);
+    return this.albumService.createAlbum(
+      {
+        ...createAlbumDto,
+        album_type: EAlbumType.STANDARD,
+      },
+      token,
+    );
   }
 
   @UseGuards(AuthGuard)
