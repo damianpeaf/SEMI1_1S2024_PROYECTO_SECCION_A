@@ -18,14 +18,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter()
 
-
 # TODO: Validate album_id
 @router.post("/photo", response_model=dict, status_code=200)
 async def upload_photo(
-    name: str = Form(...),
-    image: UploadFile = File(...),
-    album: str = Form(...),
     token: str = Depends(oauth2_scheme),
+    name: str = Form(None),
+    album: str = Form(None),
+    image: UploadFile = File(None),
 ):
     try:
         album = int(album)

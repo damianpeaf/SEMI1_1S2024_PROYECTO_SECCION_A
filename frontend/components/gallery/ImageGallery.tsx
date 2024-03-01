@@ -1,42 +1,58 @@
 "use client";
-import { Card, CardBody, Tab, Tabs } from "@nextui-org/react";
-import React from "react";
+import { Card, CardBody, Progress, Tab, Tabs } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
 import { ImageGrid } from "./GalleryGrid";
+import { useApi } from "@/hooks/useApi";
+import { ApiResponse } from "@/types/Api";
+import { Albums, GetAlbumResponseT } from "../albums/AlbumCrud";
 
-const albums = [
-  {
-    id: 1,
-    title: "Fotos de perfil",
-    images: [
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-1.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-2.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-3.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-4.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-5.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-6.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-7.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-8.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-9.jpg",
-    ],
-  },
-  {
-    id: 2,
-    title: "Album 1",
-    images: [
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-2.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-3.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-1.jpg",
-      "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-4.jpg",
-    ],
-  },
-];
 export const ImageGallery = () => {
+  const [albumsData, setAlbumsData] = useState<
+    {
+      id: number;
+      title: string;
+      images: {
+        url: string;
+        name: string;
+      }[];
+    }[]
+  >([]);
+
+  const albumApi = useApi<ApiResponse<GetAlbumResponseT>>({
+    endpointPath: "album",
+    method: "GET",
+  });
+
+  const getAlbums = async () => {
+    const resp = await albumApi.call();
+    if (!resp) return;
+    setAlbumsData(
+      resp?.data?.albums.map((album: Albums) => ({
+        id: album.id,
+        title: album.name,
+        images: album.images.map((image) => ({
+          name: image.name,
+          url: image.url,
+        })),
+      })) || []
+    );
+  };
+  useEffect(() => {
+    getAlbums();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (albumApi.loading)
+    return (
+      <div className="flex w-full flex-col min-h-screen">
+        <Progress isIndeterminate />
+      </div>
+    );
+
   return (
     <div className="flex w-full flex-col">
       <Tabs aria-label="Options" color="primary" variant="bordered">
-        {albums.map((album) => (
+        {albumsData.map((album) => (
           <Tab
             key={album.id}
             title={

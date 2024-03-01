@@ -1,5 +1,5 @@
 "use client";
-import { Button, Card, CardBody } from "@nextui-org/react";
+import { Button, Card, CardBody, Progress } from "@nextui-org/react";
 import { IoAdd } from "react-icons/io5";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
@@ -9,6 +9,7 @@ import { AlbumModal } from "./AlbumModal";
 import { Album } from "@/types/Album";
 import { useApi } from "@/hooks/useApi";
 import { ApiResponse } from "@/types/Api";
+import { Loader } from "../routes/Loader";
 
 export interface GetAlbumResponseT {
   albums: Albums[];
@@ -61,8 +62,12 @@ export const AlbumCrud = () => {
     if (!resp) return;
     getAlbums();
   };
+
   return (
     <>
+      {(getApi.loading || deleteApi.loading) && (
+        <Progress isIndeterminate className="mb-4" />
+      )}
       <AlbumModal
         isOpen={isOpen}
         scrollBehavior="outside"

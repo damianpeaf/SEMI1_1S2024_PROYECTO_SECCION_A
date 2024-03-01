@@ -86,8 +86,8 @@ export const Table = ({
       <TableBody items={items}>
         {(item) => (
           <TableRow>
-            {headers.map((header) => (
-              <TableCell key={header.key}>
+            {headers.map((header, index) => (
+              <TableCell key={`cell-${index}`}>
                 {header.formatter
                   ? header.formatter(item)
                   : header.key

@@ -4,22 +4,31 @@ import {
   SelectItemProps,
   SelectProps as NextUISelectProps,
 } from "@nextui-org/react";
+import { Control, Controller } from "react-hook-form";
 interface Option extends Omit<SelectItemProps, "children"> {
   label: string;
 }
 
 interface SelectProps extends Omit<NextUISelectProps, "children"> {
   options: Option[];
+  control: Control<any>;
+  name: string;
 }
 
-export const Select = ({ options, ...props }: SelectProps) => {
+export const Select = ({ control, name, ...selectProps }: SelectProps) => {
   return (
-    <NextUISelect {...props}>
-      {options.map(({ label, ...itemProps }, index) => (
-        <SelectItem {...itemProps} key={`${itemProps.key}-${index}`}>
-          {label}
-        </SelectItem>
-      ))}
-    </NextUISelect>
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <NextUISelect {...field} {...selectProps}>
+          {selectProps.options.map(({ label, ...itemProps }, index) => (
+            <SelectItem {...itemProps} key={`${itemProps.key}`}>
+              {label}
+            </SelectItem>
+          ))}
+        </NextUISelect>
+      )}
+    />
   );
 };
