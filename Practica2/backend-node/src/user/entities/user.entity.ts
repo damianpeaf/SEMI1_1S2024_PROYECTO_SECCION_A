@@ -1,3 +1,4 @@
+import { Rekognition } from 'aws-sdk';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'user' })
@@ -18,5 +19,5 @@ export class User {
   photoUrl: string;
 
   @Column('jsonb', { nullable: true })
-  faceDescriptor: number[];
+  faceDescriptor: Rekognition.Labels;
 }

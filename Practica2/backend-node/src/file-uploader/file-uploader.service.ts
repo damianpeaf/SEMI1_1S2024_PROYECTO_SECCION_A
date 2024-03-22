@@ -25,6 +25,10 @@ export class FileUploaderService {
     this.DEFAULT_BUCKET = this.configService.get('AWS_S3_BUCKET');
   }
 
+  public async getS3Client() {
+    return this.s3Client;
+  }
+
   async uploadFile(file: Express.Multer.File, path: string) {
     if (!file) return null;
 

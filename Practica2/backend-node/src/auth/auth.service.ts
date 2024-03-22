@@ -9,6 +9,7 @@ import { UserService } from '../user/user.service';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserWithPhoto } from '../user/interfaces';
+import { RekognitionService } from 'src/rekognition/rekognition.service';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtServiceLocal: JwtServiceLocal,
     private readonly userService: UserService,
+    private readonly rekognitionService: RekognitionService,
   ) {}
 
   async register(createUserDto: CreateUserWithPhoto) {
@@ -38,9 +40,18 @@ export class AuthService {
       throw new UnauthorizedException('El usuario no existe');
     }
 
-    const encryptedPassword = await this.jwtServiceLocal.encrypt(password);
-    if (user.password !== encryptedPassword) {
-      throw new UnauthorizedException('La contraseña es incorrecta');
+    if (photo) {
+      const { FaceMatches } = await this.rekognitionService.compareFaces(user.photoUrl, photo);
+
+      if (!FaceMatches || FaceMatches.length === 0) {
+        throw new UnauthorizedException('No se encontró coincidencia con la foto');
+      }
+
+    } else {
+      const encryptedPassword = await this.jwtServiceLocal.encrypt(password);
+      if (user.password !== encryptedPassword) {
+        throw new UnauthorizedException('La contraseña es incorrecta');
+      }
     }
 
     delete user.password;
@@ -53,6 +64,7 @@ export class AuthService {
         username: user.username,
         image: user.photoUrl,
         jwt: this.jwtServiceLocal.getJwtToken({ id: user.id }),
+        labels: user.faceDescriptor,
       },
     };
   }

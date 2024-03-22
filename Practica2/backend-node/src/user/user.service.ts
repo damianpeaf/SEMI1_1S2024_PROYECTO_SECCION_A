@@ -20,6 +20,7 @@ import {
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { CreateUserWithPhoto, UpdateUserWithPhoto } from './interfaces';
 import { PhotoService } from '../photo/photo.service';
+import { RekognitionService } from 'src/rekognition/rekognition.service';
 
 @Injectable()
 export class UserService {
@@ -30,10 +31,22 @@ export class UserService {
     private readonly photoService: PhotoService,
     private readonly jwtServiceLocal: JwtServiceLocal,
     private readonly fileUploaderService: FileUploaderService,
-  ) {}
+    private readonly rekognitionService: RekognitionService,
+  ) { }
 
   async create(createUserDto: CreateUserWithPhoto) {
     const { password, ...userData } = createUserDto;
+
+    if (!userData.photo) {
+      throw new BadRequestException('Se necesita una imagen de perfil');
+    }
+
+    const { Labels } = await this.rekognitionService.getTags(userData.photo);
+
+    if (!Labels) {
+      throw new BadRequestException('No se pudo obtener las etiquetas de la imagen');
+    }
+
     const profileUrl = await this.fileUploaderService.uploadImage(
       userData.photo,
       ImagesFolders.PROFILE,
@@ -50,6 +63,7 @@ export class UserService {
         ...userData,
         photoUrl: profileUrl,
         password: encryptedPassword,
+        faceDescriptor: Labels,
       });
 
       await this.userRepository.save(user);

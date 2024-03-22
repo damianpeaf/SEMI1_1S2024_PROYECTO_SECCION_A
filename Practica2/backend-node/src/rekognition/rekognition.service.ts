@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Rekognition } from 'aws-sdk'
 import { CompareFacesRequest } from 'aws-sdk/clients/rekognition';
+import * as fs from 'fs';
 
 @Injectable()
 export class RekognitionService {
@@ -24,16 +25,20 @@ export class RekognitionService {
         return this.rekognition;
     }
 
-    async compareFaces(photo1: Buffer, photo2: Buffer) {
-        
+    async compareFaces(photoFromS3Url: string, photoFromFile: Express.Multer.File) {
+        const photoBuffer = fs.readFileSync(photoFromFile.path);
+
         const rekognition = await this.configureRekognition();
 
         const params: CompareFacesRequest = {
             SourceImage: {
-                Bytes: photo1,
+                Bytes: photoBuffer,
             },
             TargetImage: {
-                Bytes: photo2,
+                S3Object: {
+                    Bucket: this.configService.get('AWS_S3_BUCKET'),
+                    Name: photoFromS3Url,
+                },
             },
             SimilarityThreshold: 90,
         };
@@ -44,13 +49,16 @@ export class RekognitionService {
         } catch (err) {
             console.error(err);
         }
-    }
+      }
 
-    async getTags(photo: Buffer) {
+    async getTags(photo: Express.Multer.File) {
+
+        const photoBuffer = fs.readFileSync(photo.path);
+
         const rekognition = await this.configureRekognition();
         const params = {
             Image: {
-                Bytes: photo,
+                Bytes: photoBuffer,
             },
         };
 
