@@ -8,6 +8,9 @@ import {
   UseGuards,
   Headers,
   Put,
+  UploadedFile,
+  ParseFilePipe,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -18,6 +21,20 @@ import { EAlbumType } from './entities/album-type.entity';
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
+
+  @UseGuards(AuthGuard)
+  @Post('/text')
+  extractTextFromImage(
+    @Headers('Authorization') token: string,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' })],
+      })
+    )
+    photo?: Express.Multer.File,
+  ) {
+    return this.albumService.extractTextFromImage(photo);
+  }
 
   @UseGuards(AuthGuard)
   @Post()

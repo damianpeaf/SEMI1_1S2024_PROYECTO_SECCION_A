@@ -7,6 +7,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { PhotoService } from '../photo/photo.service';
+import { RekognitionService } from '..//rekognition/rekognition.service';
 
 @Injectable()
 export class AlbumService {
@@ -15,6 +16,7 @@ export class AlbumService {
     private readonly albumRepository: Repository<Album>,
     private readonly photoService: PhotoService,
     private readonly jwtService: JwtServiceLocal,
+    private readonly rekognitionService: RekognitionService,
   ) {}
 
   async createAlbum(
@@ -117,5 +119,9 @@ export class AlbumService {
     } catch (error) {
       throw new Error('No se pudo eliminar el album');
     }
+  }
+
+  extractTextFromImage(photo: Express.Multer.File) {
+    return this.rekognitionService.extractText(photo);
   }
 }

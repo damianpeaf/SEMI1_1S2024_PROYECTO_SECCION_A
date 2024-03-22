@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Rekognition } from 'aws-sdk'
-import { CompareFacesRequest } from 'aws-sdk/clients/rekognition';
+import { CompareFacesRequest, DetectTextRequest } from 'aws-sdk/clients/rekognition';
 import * as fs from 'fs';
 
 @Injectable()
@@ -64,6 +64,25 @@ export class RekognitionService {
 
         try {
             const response = await rekognition.detectLabels(params).promise();
+            return response;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async extractText(photo: Express.Multer.File) {
+        const photoBuffer = fs.readFileSync(photo.path);
+
+        const rekognition = await this.configureRekognition();
+
+        const params: DetectTextRequest = {
+            Image: {
+                Bytes: photoBuffer,
+            },
+        };
+
+        try {
+            const response = await rekognition.detectText(params).promise();
             return response;
         } catch (err) {
             console.error(err);
