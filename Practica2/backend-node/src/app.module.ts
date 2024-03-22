@@ -17,6 +17,7 @@ import { JwtModuleLocal } from './jwt/jwt.module';
 import { PhotoModule } from './photo/photo.module';
 import { DefaultController } from './default/default.controller';
 import { RekognitionModule } from './rekognition/rekognition.module';
+import { TranslateModule } from './translate/translate.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RekognitionModule } from './rekognition/rekognition.module';
     JwtModuleLocal,
     PhotoModule,
     RekognitionModule,
+    TranslateModule,
   ],
   providers: [JwtServiceLocal],
   controllers: [DefaultController],

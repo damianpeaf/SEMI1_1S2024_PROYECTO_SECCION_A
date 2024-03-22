@@ -78,4 +78,14 @@ export class AlbumController {
   remove(@Headers('Authorization') token: string, @Param('id') id: string) {
     return this.albumService.remove(id, token);
   }
+
+  @UseGuards(AuthGuard)
+  @Post('photo/translate')
+  translatePhotoDescription(
+    @Headers('Authorization') token: string,
+    @Body('id') id: string,
+    @Body('language') language: string,
+  ) {
+    return this.albumService.translatePhotoDescription(id, language, token);
+  }
 }

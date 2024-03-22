@@ -13,4 +13,7 @@ export class Photo {
 
   @Column('integer', { nullable: false, name: 'album' })
   album: number;
+
+  @Column('text', { nullable: false, name: 'description' })
+  description: string;
 }

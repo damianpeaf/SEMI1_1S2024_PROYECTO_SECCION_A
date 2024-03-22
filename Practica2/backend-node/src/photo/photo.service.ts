@@ -8,6 +8,7 @@ import {
   FileUploaderService,
   ImagesFolders,
 } from '../file-uploader/file-uploader.service';
+import { TranslateService } from 'src/translate/translate.service';
 
 @Injectable()
 export class PhotoService {
@@ -15,6 +16,7 @@ export class PhotoService {
     @InjectRepository(Photo)
     private readonly photoRepository: Repository<Photo>,
     private readonly fileUploaderService: FileUploaderService,
+    private readonly translateService: TranslateService,
   ) {}
 
   async createPhoto(createPhotoDto: CreatePhotoWithFile) {
@@ -29,6 +31,7 @@ export class PhotoService {
       album: createPhotoDto.album,
       name: createPhotoDto.name,
       url: profileUrl,
+      description: createPhotoDto.description,
     });
   }
 
@@ -54,5 +57,23 @@ export class PhotoService {
     return await this.photoRepository.find({
       where: { album },
     });
+  }
+
+  async translatePhotoDescription(id: string, language: string) {
+    const photo = await this.photoRepository.findOne({
+      where: { id },
+    });
+    if (!photo) throw new Error('Foto no encontrada');
+
+    const translatedDescription = await this.translateService.translateText(
+      photo.description,
+      'es',
+      language,
+    );
+
+    return {
+      ...photo,
+      description: translatedDescription,
+    };
   }
 }

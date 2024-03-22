@@ -6,6 +6,9 @@ export class CreatePhotoDto {
 
   @IsString()
   album: string;
+
+  @IsString()
+  description: string;
 }
 
 export interface CreatePhotoWithFile extends CreatePhotoDto {

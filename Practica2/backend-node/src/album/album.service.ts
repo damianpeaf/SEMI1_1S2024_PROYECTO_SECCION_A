@@ -124,4 +124,13 @@ export class AlbumService {
   extractTextFromImage(photo: Express.Multer.File) {
     return this.rekognitionService.extractText(photo);
   }
+
+  async translatePhotoDescription(id: string, language: string, token: string) {
+    const response = await this.photoService.translatePhotoDescription(id, language);
+    return {
+      message: 'Descripción traducida correctamente',
+      status: HttpStatus.OK,
+      data: response,
+    };
+  }
 }
