@@ -24,7 +24,11 @@ export class AuthService {
   }
 
   async login(loginUserDto: LoginUserDto) {
-    const { password, username } = loginUserDto;
+    const { password, username, photo } = loginUserDto;
+
+    if (!password && !photo) {
+      throw new UnauthorizedException('Debe ingresar una contraseña o una foto');
+    }
 
     const user = await this.userRepository.findOne({
       where: { username },

@@ -40,9 +40,30 @@ export class AuthController {
       photo,
     });
   }
+  // username required
+// user can login with password or photo face recognition
 
   @Post('login')
-  login(@Body() loginUserDto: LoginUserDto) {
-    return this.authService.login(loginUserDto);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @UseInterceptors(
+    FileInterceptor('photo', {
+      storage: memoryStorage(),
+    }),
+  )
+
+
+  login(
+    @Body() loginUserDto: LoginUserDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' })],
+      })
+    )
+    photo?: Express.Multer.File,
+    ) {
+    return this.authService.login({
+      ...loginUserDto,
+      photo,
+    });
   }
 }

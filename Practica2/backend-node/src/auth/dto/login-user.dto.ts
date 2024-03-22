@@ -1,5 +1,7 @@
 import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
+// username required
+// user can login with password or photo face recognition
 export class LoginUserDto {
   @IsString()
   username: string;
@@ -11,5 +13,8 @@ export class LoginUserDto {
     message:
       'The password must have a Uppercase, lowercase letter and a number',
   })
-  password: string;
+
+  password?: string;
+
+  photo?: Express.Multer.File;
 }

@@ -16,4 +16,7 @@ export class User {
 
   @Column('text', { nullable: true, name: 'photo_url' })
   photoUrl: string;
+
+  @Column('jsonb', { nullable: true })
+  faceDescriptor: number[];
 }
