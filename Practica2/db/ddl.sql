@@ -32,6 +32,12 @@ create table photo (
     id serial primary key,
     name varchar(255) not null,
     url text not null,
-    album integer not null references album(id)
     description text,
+);
+
+DROP TABLE IF EXISTS photo_album CASCADE;
+CREATE TABLE photo_album (
+    id SERIAL PRIMARY KEY,
+    photo_id INTEGER NOT NULL REFERENCES photo(id),
+    album_id INTEGER NOT NULL REFERENCES album(id)
 );

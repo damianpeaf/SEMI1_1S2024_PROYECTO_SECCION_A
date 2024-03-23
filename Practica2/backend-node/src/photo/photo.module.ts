@@ -6,10 +6,11 @@ import { Photo } from './entities/photo.entity';
 import { JwtModuleLocal } from '../jwt/jwt.module';
 import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 import { JwtServiceLocal } from '../jwt/jwt.service';
+import { PhotoAlbum } from './entities/photo_album.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Photo]),
+    TypeOrmModule.forFeature([Photo, PhotoAlbum]),
     JwtModuleLocal,
     FileUploaderModule,
   ],

@@ -40,8 +40,6 @@ export class AuthController {
       photo,
     });
   }
-  // username required
-// user can login with password or photo face recognition
 
   @Post('login')
   @UsePipes(new ValidationPipe({ transform: true }))

@@ -78,6 +78,7 @@ export class UserService {
         album: newAlbum.id,
         name: 'Foto de perfil' + new Date().toISOString(),
         url: profileUrl,
+        description: 'Foto de perfil',
       });
 
       delete user.password;
@@ -159,6 +160,7 @@ export class UserService {
           album: profileAlbum.id,
           name: 'Foto de perfil' + new Date().toISOString(),
           url: profileUrl,
+          description: 'Foto de perfil',
         });
       }
 
@@ -179,10 +181,6 @@ export class UserService {
     } catch (error) {
       this.handleDBErrors(error);
     }
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 
   private handleDBErrors(error: any): never {

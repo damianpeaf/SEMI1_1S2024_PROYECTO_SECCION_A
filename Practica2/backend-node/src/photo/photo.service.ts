@@ -9,12 +9,14 @@ import {
   ImagesFolders,
 } from '../file-uploader/file-uploader.service';
 import { TranslateService } from 'src/translate/translate.service';
+import { PhotoAlbum } from './entities/photo_album.entity';
 
 @Injectable()
 export class PhotoService {
   constructor(
     @InjectRepository(Photo)
     private readonly photoRepository: Repository<Photo>,
+    private readonly photoAlbumRepository: Repository<PhotoAlbum>,
     private readonly fileUploaderService: FileUploaderService,
     private readonly translateService: TranslateService,
   ) {}
@@ -39,7 +41,6 @@ export class PhotoService {
     try {
       const photo = this.photoRepository.create({
         ...createPhotoDto,
-        album: +createPhotoDto.album,
       });
       await this.photoRepository.save(photo);
       return {
@@ -55,7 +56,6 @@ export class PhotoService {
 
   async findByAlbumId(album: number) {
     return await this.photoRepository.find({
-      where: { album },
     });
   }
 
