@@ -31,7 +31,7 @@ export class RekognitionService {
     }
 
     async compareFaces(photoFromS3Url: string, photoFromFile: Express.Multer.File) {
-        const photoBuffer = fs.readFileSync(photoFromFile.path);
+        const photoBuffer = photoFromFile.buffer;
 
         const rekognition = await this.configureRekognition();
 

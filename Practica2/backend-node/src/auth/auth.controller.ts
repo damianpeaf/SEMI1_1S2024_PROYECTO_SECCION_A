@@ -55,6 +55,7 @@ export class AuthController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' })],
+        fileIsRequired: false,
       })
     )
     photo?: Express.Multer.File,
