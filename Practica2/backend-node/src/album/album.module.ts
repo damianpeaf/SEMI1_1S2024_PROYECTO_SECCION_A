@@ -9,6 +9,8 @@ import { JwtModuleLocal } from '../jwt/jwt.module';
 import { PhotoModule } from '../photo/photo.module';
 import { PhotoService } from '../photo/photo.service';
 import { FileUploaderModule } from '../file-uploader/file-uploader.module';
+import { RekognitionModule } from 'src/rekognition/rekognition.module';
+import { TranslateModule } from 'src/translate/translate.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { FileUploaderModule } from '../file-uploader/file-uploader.module';
     JwtModuleLocal,
     PhotoModule,
     FileUploaderModule,
+    TranslateModule,
+    RekognitionModule,
   ],
   controllers: [AlbumController],
   providers: [AlbumService, JwtServiceLocal, PhotoService],

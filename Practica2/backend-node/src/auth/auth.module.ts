@@ -11,6 +11,7 @@ import { JwtServiceLocal } from '../jwt/jwt.service';
 
 import { AuthController } from './auth.controller';
 import { PhotoModule } from '../photo/photo.module';
+import { RekognitionModule } from 'src/rekognition/rekognition.module';
 
 
 @Module({
@@ -18,6 +19,7 @@ import { PhotoModule } from '../photo/photo.module';
   providers: [AuthService, UserService, JwtServiceLocal],
   imports: [
     AlbumModule,
+    RekognitionModule,
     FileUploaderModule,
     UserModule,
     PhotoModule,

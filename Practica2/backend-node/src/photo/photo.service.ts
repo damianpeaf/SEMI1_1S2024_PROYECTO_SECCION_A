@@ -16,6 +16,7 @@ export class PhotoService {
   constructor(
     @InjectRepository(Photo)
     private readonly photoRepository: Repository<Photo>,
+    @InjectRepository(PhotoAlbum)
     private readonly photoAlbumRepository: Repository<PhotoAlbum>,
     private readonly fileUploaderService: FileUploaderService,
     private readonly translateService: TranslateService,

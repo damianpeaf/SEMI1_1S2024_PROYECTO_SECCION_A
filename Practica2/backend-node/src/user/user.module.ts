@@ -8,6 +8,7 @@ import { FileUploaderModule } from '../file-uploader/file-uploader.module';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { JwtModuleLocal } from '../jwt/jwt.module';
 import { PhotoModule } from '../photo/photo.module';
+import { RekognitionModule } from 'src/rekognition/rekognition.module';
 
 @Module({
   controllers: [UserController],
@@ -16,6 +17,7 @@ import { PhotoModule } from '../photo/photo.module';
     TypeOrmModule.forFeature([User]),
     JwtModuleLocal,
     AlbumModule,
+    RekognitionModule,
     PhotoModule,
     FileUploaderModule,
   ],
