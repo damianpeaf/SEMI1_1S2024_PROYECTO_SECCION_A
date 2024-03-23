@@ -4,12 +4,10 @@ import { ImageInput } from "../forms/ImageInput";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Select } from "@/components/forms/Select";
 import { useApi } from "@/hooks/useApi";
 import { useEffect, useState } from "react";
 import { Albums, GetAlbumResponseT } from "../albums/AlbumCrud";
 import { ApiResponse } from "@/types/Api";
-import { Loader } from "../routes/Loader";
 import { Input } from "../forms/Input";
 
 export const UploadImageSchema = z.object({
@@ -17,7 +15,7 @@ export const UploadImageSchema = z.object({
     message: "El nombre de la imagen es muy corto, mínimo 2 caracteres",
   }),
   image: z.any().refine((val) => val?.length > 0, "Imagen de perfil requerida"),
-  album: z.coerce.number().int().positive(),
+  description: z.string().min(2, { message: "La descripción es muy corta" }),
 });
 type TUploadImageSchema = z.infer<typeof UploadImageSchema>;
 
@@ -56,7 +54,7 @@ export const UploadPhotoForm = () => {
   const onSubmit: SubmitHandler<TUploadImageSchema> = async (data) => {
     const formData = new FormData();
     formData.append("name", data.name);
-    formData.append("album", data.album.toString());
+    formData.append("description", data.description);
     formData.append("image", data.image[0]);
 
     const resp = await uploadApi.call({
@@ -95,18 +93,14 @@ export const UploadPhotoForm = () => {
               control={control}
               name="name"
             />
-            <Select
-              label="Album"
+            <Input
+              label="Descripción"
               variant="bordered"
-              placeholder="Selecciona un album"
-              options={albumsData.map((album) => ({
-                key: album.id,
-                value: album.id,
-                label: `${album.id} - ${album.name}`,
-              }))}
+              placeholder="..."
+              isInvalid={!!errors.description}
+              errorMessage={<>{errors.description?.message}</>}
               control={control}
-              name="album"
-              errorMessage={errors.album?.message?.toString() || ""}
+              name="description"
             />
             <ImageInput
               {...register("image")}

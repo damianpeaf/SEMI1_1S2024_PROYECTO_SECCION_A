@@ -43,6 +43,11 @@ export const Navbar = () => {
             Subir foto
           </Link>
         </NavbarItem>
+        <NavbarItem>
+          <Link href="/extract-text" aria-current="page" color="secondary">
+            Extraer texto
+          </Link>
+        </NavbarItem>
       </NavbarContent>
 
       <NavbarContent as="div" justify="end">
