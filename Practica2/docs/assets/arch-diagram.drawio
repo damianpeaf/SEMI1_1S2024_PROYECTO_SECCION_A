@@ -1,0 +1,64 @@
+<mxfile host="app.diagrams.net" modified="2024-03-23T03:36:07.778Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="HK3K0oIBO0-_XFYbaiPj" version="24.0.7" type="device">
+  <diagram name="Página-1" id="xXC0PnMohB6uQDPlgzKn">
+    <mxGraphModel dx="472" dy="817" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-1" value="App Web Publica" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="270" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-2" value="Servidor Web: Node" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="500" y="460" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-3" value="Bucket de imagenes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="1">
+          <mxGeometry x="730" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-4" value="Base de datos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" vertex="1" parent="1">
+          <mxGeometry x="730" y="555" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-5" value="Motor de Chatbot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="500" y="640" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-6" value="Analisis de imagenes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" vertex="1" parent="1">
+          <mxGeometry x="500" y="270" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-7" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="TXBFD1cxY78E7a_v-TGv-1" target="TXBFD1cxY78E7a_v-TGv-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="530" y="500" as="sourcePoint" />
+            <mxPoint x="580" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-8" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="TXBFD1cxY78E7a_v-TGv-2" target="TXBFD1cxY78E7a_v-TGv-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="530" y="500" as="sourcePoint" />
+            <mxPoint x="580" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-9" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="TXBFD1cxY78E7a_v-TGv-2" target="TXBFD1cxY78E7a_v-TGv-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="530" y="500" as="sourcePoint" />
+            <mxPoint x="580" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-11" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="TXBFD1cxY78E7a_v-TGv-2" target="TXBFD1cxY78E7a_v-TGv-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="530" y="500" as="sourcePoint" />
+            <mxPoint x="800" y="490" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="790" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="TXBFD1cxY78E7a_v-TGv-12" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="TXBFD1cxY78E7a_v-TGv-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="620" y="490" as="sourcePoint" />
+            <mxPoint x="800" y="440" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="790" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
