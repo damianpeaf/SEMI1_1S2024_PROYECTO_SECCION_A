@@ -22,7 +22,7 @@ export class AuthController {
   @Post('register')
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(
-    FileInterceptor('image', {
+    FileInterceptor('photo', {
       storage: memoryStorage(),
     }),
   )

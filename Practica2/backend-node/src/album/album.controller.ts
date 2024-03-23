@@ -11,19 +11,25 @@ import {
   UploadedFile,
   ParseFilePipe,
   FileTypeValidator,
+  UsePipes,
+  ValidationPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AuthGuard } from '../jwt/guards/jwt-guard';
 import { EAlbumType } from './entities/album-type.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import { CreatePhotoDto } from 'src/photo/dto/create-photo.dto';
 
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @UseGuards(AuthGuard)
-  @Post('/text')
+  @Post('photo/text')
   extractTextFromImage(
     @Headers('Authorization') token: string,
     @UploadedFile(
@@ -77,6 +83,25 @@ export class AlbumController {
   @Delete(':id')
   remove(@Headers('Authorization') token: string, @Param('id') id: string) {
     return this.albumService.remove(id, token);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('photo')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: memoryStorage(),
+    }),
+  )
+  createPhoto(
+    @Headers('Authorization') token: string,
+    @Body() createPhotoDto: CreatePhotoDto,
+    @UploadedFile() photo: Express.Multer.File,
+  ) {
+    return this.albumService.createPhoto({
+      ...createPhotoDto,
+      photo,
+    }, token);
   }
 
   @UseGuards(AuthGuard)

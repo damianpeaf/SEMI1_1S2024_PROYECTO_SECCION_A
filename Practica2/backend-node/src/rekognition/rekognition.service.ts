@@ -4,6 +4,11 @@ import { Rekognition } from 'aws-sdk'
 import { CompareFacesRequest, DetectTextRequest } from 'aws-sdk/clients/rekognition';
 import * as fs from 'fs';
 
+export interface FaceDescriptor {
+    name: string;
+    confidence: number;
+}
+
 @Injectable()
 export class RekognitionService {
 
@@ -53,7 +58,7 @@ export class RekognitionService {
 
     async getTags(photo: Express.Multer.File) {
 
-        const photoBuffer = fs.readFileSync(photo.path);
+        const photoBuffer = photo.buffer;
 
         const rekognition = await this.configureRekognition();
         const params = {
@@ -64,7 +69,17 @@ export class RekognitionService {
 
         try {
             const response = await rekognition.detectLabels(params).promise();
-            return response;
+
+            const relevantDescriptors = response.Labels.filter((label) => label.Confidence > 80);
+
+            const descriptors: FaceDescriptor[] = relevantDescriptors.map((label) => {
+                return {
+                    name: label.Name,
+                    confidence: label.Confidence,
+                };
+            });
+
+            return { Labels: descriptors };
         } catch (err) {
             console.error(err);
         }

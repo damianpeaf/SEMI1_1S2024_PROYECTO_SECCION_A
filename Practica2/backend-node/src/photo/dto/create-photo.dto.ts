@@ -5,9 +5,6 @@ export class CreatePhotoDto {
   name: string;
 
   @IsString()
-  album: string;
-
-  @IsString()
   description: string;
 }
 

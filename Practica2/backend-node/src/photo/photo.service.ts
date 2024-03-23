@@ -31,7 +31,6 @@ export class PhotoService {
       throw new InternalServerErrorException('No se pudo subir la imagen');
 
     return await this.create({
-      album: createPhotoDto.album,
       name: createPhotoDto.name,
       url: profileUrl,
       description: createPhotoDto.description,
@@ -41,9 +40,13 @@ export class PhotoService {
   async create(createPhotoDto: CreatePhotoDto & { url?: string }) {
     try {
       const photo = this.photoRepository.create({
-        ...createPhotoDto,
+        name: createPhotoDto.name,
+        url: createPhotoDto.url,
+        description: createPhotoDto.description,
       });
+      
       await this.photoRepository.save(photo);
+
       return {
         message: 'Foto creada correctamente',
         status: 200,
@@ -75,6 +78,21 @@ export class PhotoService {
     return {
       ...photo,
       description: translatedDescription,
+    };
+  }
+
+  async createPhotoAlbum(photoId: number, albumId: number) {
+    const photoAlbum = this.photoAlbumRepository.create({
+      albumId,
+      photoId,
+    });
+
+    await this.photoAlbumRepository.save(photoAlbum);
+
+    return {
+      message: 'Foto agregada al album correctamente',
+      status: 200,
+      data: photoAlbum,
     };
   }
 }

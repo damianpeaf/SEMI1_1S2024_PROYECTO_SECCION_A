@@ -8,6 +8,7 @@ import { Album } from './entities/album.entity';
 import { JwtServiceLocal } from '../jwt/jwt.service';
 import { PhotoService } from '../photo/photo.service';
 import { RekognitionService } from '..//rekognition/rekognition.service';
+import { CreatePhotoDto } from 'src/photo/dto/create-photo.dto';
 
 @Injectable()
 export class AlbumService {
@@ -121,8 +122,8 @@ export class AlbumService {
     }
   }
 
-  extractTextFromImage(photo: Express.Multer.File) {
-    return this.rekognitionService.extractText(photo);
+  async extractTextFromImage(photo: Express.Multer.File) {
+    return await this.rekognitionService.extractText(photo);
   }
 
   async translatePhotoDescription(id: string, language: string, token: string) {
@@ -133,4 +134,48 @@ export class AlbumService {
       data: response,
     };
   }
+
+  async createPhoto(createPhotoDto: CreatePhotoDto & { photo: Express.Multer.File }, token: string) {
+      /*
+      1. Create photo
+      2. Extract TAGS from photo
+      3. Create/Find album with TAGS
+      4. Add photo to album with photo_album
+      */
+
+      const photo = await this.photoService.create(createPhotoDto);
+
+      const { Labels } = await this.rekognitionService.getTags(createPhotoDto.photo)
+
+      console.log(Labels, 'Labels');
+
+      const tags = Labels.slice(0, 5).map((label) => label.name);
+
+      console.log(tags, 'tags');
+
+      for (let i = 0; i < tags.length; i++) {
+        const album = await this.albumRepository.findOne({
+          where: { name: tags[i] },
+        });
+
+        if (!album) {
+          await this.createAlbum({
+            name: tags[i],
+            album_type: 2,
+          }, token);
+        } 
+
+        const photoAlbum = await this.photoService.createPhotoAlbum(+photo.data.id, +album.id);
+
+        console.log(photoAlbum, 'photoAlbum');
+      }
+      
+
+      return {
+        message: 'Foto creada correctamente',
+        status: HttpStatus.OK,
+        data: photo,
+      }
+  }
+
 }

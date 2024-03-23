@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { PhotoService } from './photo.service';
-import { PhotoController } from './photo.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Photo } from './entities/photo.entity';
 import { JwtModuleLocal } from '../jwt/jwt.module';
@@ -17,7 +16,7 @@ import { TranslateService } from 'src/translate/translate.service';
     FileUploaderModule,
     TranslateModule,
   ],
-  controllers: [PhotoController],
+  controllers: [],
   providers: [PhotoService, JwtServiceLocal, TranslateService],
   exports: [PhotoService, TypeOrmModule]
 })

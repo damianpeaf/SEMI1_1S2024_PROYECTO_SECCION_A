@@ -47,14 +47,16 @@ export class UserService {
       throw new BadRequestException('No se pudo obtener las etiquetas de la imagen');
     }
 
-    const profileUrl = await this.fileUploaderService.uploadImage(
-      userData.photo,
-      ImagesFolders.PROFILE,
-    );
-    if (!profileUrl)
-      throw new InternalServerErrorException(
-        'No se pudo subir la imagen de perfil',
-      );
+    // const profileUrl = await this.fileUploaderService.uploadImage(
+    //   userData.photo,
+    //   ImagesFolders.PROFILE,
+    // );
+    // if (!profileUrl)
+    //   throw new InternalServerErrorException(
+    //     'No se pudo subir la imagen de perfil',
+    //   );
+
+    const profileUrl = '';
 
     try {
       const encryptedPassword = await this.jwtServiceLocal.encrypt(password);
@@ -74,12 +76,16 @@ export class UserService {
         user: +user.id,
       });
 
-      this.photoService.create({
-        album: newAlbum.id,
+      const { data: newPhoto } = await this.photoService.create({
         name: 'Foto de perfil' + new Date().toISOString(),
         url: profileUrl,
         description: 'Foto de perfil',
       });
+
+      await this.photoService.createPhotoAlbum(
+        +newAlbum.id,
+        +newPhoto.id,
+      );
 
       delete user.password;
 
@@ -157,7 +163,6 @@ export class UserService {
       if (profileUrl) {
         const profileAlbum = await this.albumService.getProfileAlbum(+userId);
         await this.photoService.create({
-          album: profileAlbum.id,
           name: 'Foto de perfil' + new Date().toISOString(),
           url: profileUrl,
           description: 'Foto de perfil',

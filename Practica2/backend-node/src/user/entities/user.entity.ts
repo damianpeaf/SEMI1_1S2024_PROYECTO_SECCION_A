@@ -1,4 +1,4 @@
-import { Rekognition } from 'aws-sdk';
+import { FaceDescriptor } from 'src/rekognition/rekognition.service';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'user' })
@@ -18,6 +18,6 @@ export class User {
   @Column('text', { nullable: true, name: 'photo_url' })
   photoUrl: string;
 
-  @Column('jsonb', { nullable: true })
-  faceDescriptor: Rekognition.Labels;
+  @Column('jsonb', { nullable: true, name: 'facedescriptor'})
+  faceDescriptor: FaceDescriptor[];
 }
