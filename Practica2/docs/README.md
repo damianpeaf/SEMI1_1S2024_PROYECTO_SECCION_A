@@ -85,3 +85,9 @@ Se accede a la app web pública que está alojada en un bucket S3, esta pagina e
 - Translate
 
 <img src="./assets/iam-translate.jpg" alt="drawing">
+
+## Funcionalidades de Chatbot
+
+- Agenda de una cita
+- Preguntas frecuentes
+- Consulta de saldo disponible
