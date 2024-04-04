@@ -1,30 +1,13 @@
-import {
-    pgTable,
-    serial,
-    text,
-    timestamp,
-    uniqueIndex,
-  } from 'drizzle-orm/pg-core'
-  import { InferSelectModel, InferInsertModel } from 'drizzle-orm'
-  import { drizzle } from 'drizzle-orm/vercel-postgres'
-  
-  export const UsersTable = pgTable(
-    'users',
-    {
-      id: serial('id').primaryKey(),
-      name: text('name').notNull(),
-      email: text('email').notNull(),
-      image: text('image').notNull(),
-      createdAt: timestamp('createdAt').defaultNow().notNull(),
-    },
-    (users) => {
-      return {
-        uniqueIdx: uniqueIndex('unique_idx').on(users.email),
-      }
-    }
-  )
-  
-  export type User = InferSelectModel<typeof UsersTable>
-  export type NewUser = InferInsertModel<typeof UsersTable>
-  
-  export const db = drizzle(sql)
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+
+const pool = new Pool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+});
+
+const db = drizzle(pool);
+export default db;
