@@ -13,6 +13,7 @@ class Server {
 
     private constructor() {
         this.app = express();
+        this.app.use(cors());
         this.port = +env.PORT;
         this.server = http.createServer(this.app);
     }
@@ -37,7 +38,7 @@ class Server {
         this.routes();
 
         this.server.listen(this.port, () => {
-            console.log(`Server running on port ${this.port}`);
+            console.log(`Server running on port ${this.port} with bun`);
         });
     }
 
