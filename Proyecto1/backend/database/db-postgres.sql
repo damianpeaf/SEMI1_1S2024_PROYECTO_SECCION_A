@@ -5,7 +5,7 @@ CREATE TABLE "user" (
     id SERIAL PRIMARY KEY,
     username citext NOT NULL UNIQUE,
     name varchar(255) NOT NULL,
-    password char(32) NOT NULL,
+    password char(32) NOT NULL
 );
 
 
@@ -16,8 +16,8 @@ CREATE TABLE project (
     description text NOT NULL,
     date_created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     location varchar(255) NOT NULL,
-    category varchar(255) NOT NULL,
-)
+    category varchar(255) NOT NULL
+);
 
 DROP TABLE IF EXISTS project_extra;
 CREATE TABLE project_extra (
@@ -27,21 +27,21 @@ CREATE TABLE project_extra (
     image_url varchar(255) NOT NULL,
     extra_type varchar(255) NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project(id)
-)
+);
 
 DROP TABLE IF EXISTS privilege;
 CREATE TABLE privilege (
     id SERIAL PRIMARY KEY,
     name varchar(255) NOT NULL
-)
+);
 
 DROP TABLE IF EXISTS role;
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
     privilege_id int NOT NULL,
-    name varchar(255) NOT NULL
+    name varchar(255) NOT NULL,
     FOREIGN KEY (privilege_id) REFERENCES privilege(id)
-)
+);
 
 DROP TABLE IF EXISTS user_project;
 CREATE TABLE user_project (
@@ -52,7 +52,7 @@ CREATE TABLE user_project (
     FOREIGN KEY (project_id) REFERENCES project(id),
     FOREIGN KEY (user_id) REFERENCES "user"(id),
     FOREIGN KEY (role_id) REFERENCES role(id)
-)
+);
 
 DROP TABLE IF EXISTS task;
 CREATE TABLE task (
@@ -62,4 +62,4 @@ CREATE TABLE task (
     image_url varchar(255) NOT NULL,
     notes text NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project(id)
-)
+);
