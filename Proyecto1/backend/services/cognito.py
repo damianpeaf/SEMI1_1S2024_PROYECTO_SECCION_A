@@ -6,7 +6,7 @@ from config.credentials import COGNITO_REGION, COGNITO_CLIENT_ID
 client = boto3.client("cognito-idp", region_name=COGNITO_REGION)
 
 
-def register_user(username: str, password: str, name: str):
+def register_user(username: str, password: str, name: str, id: int):
     try:
         response = client.sign_up(
             ClientId=COGNITO_CLIENT_ID,
@@ -16,6 +16,10 @@ def register_user(username: str, password: str, name: str):
                 {
                     'Name': 'name',
                     'Value': name
+                },
+                {
+                    'Name': 'custom:id',
+                    'Value': str(id)
                 }
             ]
         )
@@ -32,10 +36,11 @@ def login_user(username: str, password: str):
             AuthFlow="USER_PASSWORD_AUTH",
             AuthParameters={"USERNAME": username, "PASSWORD": password},
         )
+        print(response)
         return response
     except client.exceptions.NotAuthorizedException:
-        return json.dumps({"error": "Usuario o contraseña incorrectos."})
+        return {"error": "Usuario o password incorrectos."}
     except client.exceptions.UserNotFoundException:
-        return json.dumps({"error": "Usuario no encontrado."})
+        return {"error": "Usuario no encontrado."}
     except Exception as e:
-        return json.dumps({"error": f"Error al iniciar sesión: {e}"})
+        return {"error": f"Error al iniciar sesión: {e}"}

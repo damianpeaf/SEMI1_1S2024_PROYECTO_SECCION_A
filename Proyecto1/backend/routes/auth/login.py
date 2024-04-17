@@ -10,8 +10,8 @@ class LoginData(BaseModel):
     password: str
 
 
-@router.post("/register", response_model=dict, status_code=200)
-async def register(data: LoginData):
+@router.post("/login", response_model=dict, status_code=200)
+async def login(data: LoginData):
     # Login user with Cognito
     response = login_user(data.username, data.password)
 
