@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  postgres:
+    image: postgres
+    shm_size: "2gb"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${PGSQL_DATABASE}
+      - POSTGRES_PASSWORD=${PGSQL_PASSWORD}
+      - POSTGRES_USER=${PGSQL_USER}
+    volumes:
+      - "pg-volume:/var/lib/postgresql/data"
+volumes:
+  pg-volume:
