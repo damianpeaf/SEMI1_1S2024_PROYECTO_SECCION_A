@@ -5,6 +5,9 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 from routes.example import router as example_router
+from routes.auth.login import router as login_router
+from routes.auth.register import router as register_router
+ 
 
 app = FastAPI()
 
@@ -37,6 +40,8 @@ def read_root():
 
 
 app.include_router(example_router, prefix="/api")
+app.include_router(register_router, prefix="/auth")
+app.include_router(login_router, prefix="/auth")
 
 if __name__ == "__main__":
     import uvicorn
