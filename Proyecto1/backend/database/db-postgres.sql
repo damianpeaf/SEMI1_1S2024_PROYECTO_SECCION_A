@@ -38,9 +38,8 @@ CREATE TABLE privilege (
 DROP TABLE IF EXISTS role;
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
-    privilege_id int NOT NULL,
+    privileges integer[] NOT NULL,
     name varchar(255) NOT NULL
-    FOREIGN KEY (privilege_id) REFERENCES privilege(id)
 )
 
 DROP TABLE IF EXISTS user_project;
@@ -63,3 +62,14 @@ CREATE TABLE task (
     notes text NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project(id)
 )
+
+
+INSERT INTO privilege (name) VALUES ('Visualizar');
+INSERT INTO privilege (name) VALUES ('Modificar');
+INSERT INTO privilege (name) VALUES ('Eliminar');
+INSERT INTO privilege (name) VALUES ('Invitar');
+
+INSERT INTO role (privileges, name) VALUES ('{1,2,3,4}', 'Creador');
+INSERT INTO role (privileges, name) VALUES ('{1,2}', 'Colaborador');
+INSERT INTO role (privileges, name) VALUES ('{1}', 'Visualizador');
+
