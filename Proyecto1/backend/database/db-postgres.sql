@@ -43,8 +43,8 @@ CREATE TABLE role (
     FOREIGN KEY (privilege_id) REFERENCES privilege(id)
 )
 
-DROP TABLE IF EXISTS project_user;
-CREATE TABLE project_user (
+DROP TABLE IF EXISTS user_project;
+CREATE TABLE user_project (
     id SERIAL PRIMARY KEY,
     project_id int NOT NULL,
     user_id int NOT NULL,
