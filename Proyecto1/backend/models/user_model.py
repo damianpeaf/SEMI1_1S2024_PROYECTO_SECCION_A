@@ -46,3 +46,21 @@ class UserModel:
             return result
         except Exception as e:
             raise e
+        
+    @classmethod
+    def get_auth_user(self, username, password):
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT * FROM \"user\" WHERE username = %s AND \"password\" = %s""",
+                    (username, Encrypt.md5_encrypt(password)),
+                )
+                    
+                result = cursor.fetchone()
+                connection.close()
+
+            return result
+        except Exception as e:
+            raise e

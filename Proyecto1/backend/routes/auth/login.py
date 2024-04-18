@@ -3,6 +3,10 @@ from fastapi.responses import JSONResponse
 from services.cognito import login_user
 from pydantic import BaseModel
 
+from models.user_model import UserModel
+
+from utils.security import Security
+
 router = APIRouter()
 
 
@@ -23,10 +27,20 @@ async def login(data: LoginData):
             result_cognito.get("status") if "status" in result_cognito else 500,
         )    
 
+    # Get the user data
+    user_data = UserModel.get_auth_user(data.username, data.password)
+
+    # Create our token
+    payload = {
+        "id": user_data[0], 
+        "username": data.username,
+    }
+    
+    token = Security.generate_token(payload)
+
     # Return token if success
     response = {
-        "Token": result_cognito.get("AuthenticationResult").get("AccessToken"),
-        "ExpiresIn": result_cognito.get("AuthenticationResult").get("ExpiresIn"),
+        "token": token,
         "message": "User logged in successfully",
         "status": 200,
     }
