@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.post("/translate", response_model=dict, status_code=200)
-async def translate_text(data: TranslateData):
+async def translate(data: TranslateData):
     # Translate text
     # This is where you would call the translation service
     # and get the translated text

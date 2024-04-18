@@ -10,10 +10,10 @@ client = boto3.client(
 )
 
 
-async def translate_text(text, target_language):
+async def translate_text(text: str, target_language: str) -> str:
     params = {
         "SourceLanguageCode": "auto",
-        "TargetLanguageCode": target_language,
+        "TargetLanguageCode": target_language, # en, es, fr, de, it, pt, nl, pl, ru, zh, ja, ko, ar
         "Text": text,
     }
 
