@@ -4,14 +4,17 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
+# Import the routers
 from routes.example import router as example_router
 from routes.auth.login import router as login_router
 from routes.auth.register import router as register_router
+from routes.translate.translate_text import router as translate_router 
  
-
+# Create the FastAPI app
 app = FastAPI()
 
 
+# Exception handler for validation errors
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     return JSONResponse(
@@ -20,6 +23,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     )
 
 
+# Set CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -28,21 +32,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+# Root
 @app.get("/")
 def read_root():
     return {"msg": "root"}
 
-
+# Check
 @app.get("/check")
 def read_root():
     return {"msg": "OK"}
 
-
+# Set the routers
 app.include_router(example_router, prefix="/api")
 app.include_router(register_router, prefix="/auth")
 app.include_router(login_router, prefix="/auth")
+app.include_router(translate_router)
 
+
+# Run the app
 if __name__ == "__main__":
     import uvicorn
 
