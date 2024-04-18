@@ -5,7 +5,6 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 # Import the routers
-from routes.example import router as example_router
 from routes.auth.login import router as login_router
 from routes.auth.register import router as register_router
 from routes.translate.translate_text import router as translate_router
@@ -44,7 +43,6 @@ def read_root():
     return {"msg": "OK"}
 
 # Set the routers
-app.include_router(example_router, prefix="/api")
 app.include_router(register_router, prefix="/auth")
 app.include_router(login_router, prefix="/auth")
 app.include_router(translate_router)
