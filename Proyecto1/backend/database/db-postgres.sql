@@ -2,7 +2,7 @@ CREATE EXTENSION IF NOT EXISTS citext;
 
 DROP TABLE IF EXISTS "user";
 CREATE TABLE "user" (
-    id SERIAL PRIMARY KEY,
+    id PRIMARY KEY,
     username citext NOT NULL UNIQUE,
     name varchar(255) NOT NULL,
     password char(32) NOT NULL

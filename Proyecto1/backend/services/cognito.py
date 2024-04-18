@@ -6,7 +6,7 @@ from config.credentials import COGNITO_REGION, COGNITO_CLIENT_ID
 client = boto3.client("cognito-idp", region_name=COGNITO_REGION)
 
 
-def register_user(username: str, password: str, name: str, id: int):
+def register_user(username: str, password: str, name: str):
     try:
         response = client.sign_up(
             ClientId=COGNITO_CLIENT_ID,
@@ -16,17 +16,16 @@ def register_user(username: str, password: str, name: str, id: int):
                 {
                     'Name': 'name',
                     'Value': name
-                },
-                {
-                    'Name': 'custom:id',
-                    'Value': str(id)
                 }
             ]
         )
         
         return response
+    except client.exceptions.UsernameExistsException:
+        return {"error": "Error registering user", "message": "El usuario ya existe."}
+    
     except Exception as e:
-        return e
+        raise e
 
 
 def login_user(username: str, password: str):
