@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.post("/ocr", response_model=dict, status_code=200)
 async def image_ocr(
-    image: UploadFile = File(None)
+    image: UploadFile = File(...)
 ):
     # Get image bytes
     image_bytes = await image.read()

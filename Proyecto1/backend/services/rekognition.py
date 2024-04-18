@@ -10,7 +10,7 @@ client = boto3.client(
 )
 
 
-async def rekognition_ocr(image) -> str:
+def rekognition_ocr(image) -> str:
     try:
         response = client.detect_text(
             Image={
