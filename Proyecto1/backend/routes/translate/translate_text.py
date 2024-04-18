@@ -19,7 +19,7 @@ async def translate(data: TranslateData):
     # Translate text
     # This is where you would call the translation service
     # and get the translated text
-    translated_text = translate_text(data.text, data.target_language)
+    translated_text = await translate_text(data.text, data.target_language)
 
     # Return translated text
     response = {

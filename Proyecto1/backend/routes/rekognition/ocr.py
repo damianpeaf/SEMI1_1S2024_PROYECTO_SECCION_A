@@ -1,5 +1,4 @@
-from msilib.schema import File
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, UploadFile, File
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -12,7 +11,7 @@ router = APIRouter()
 
 @router.post("/ocr", response_model=dict, status_code=200)
 async def image_ocr(
-    image: UploadFile = File(...)
+    image: UploadFile = File(None)
 ):
     # Get image bytes
     image_bytes = await image.read()

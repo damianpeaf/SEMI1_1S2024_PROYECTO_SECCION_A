@@ -10,15 +10,13 @@ client = boto3.client(
 )
 
 
-async def translate_text(text: str, target_language: str) -> str:
-    params = {
-        "SourceLanguageCode": "auto",
-        "TargetLanguageCode": target_language, # en, es, fr, de, it, pt, nl, pl, ru, zh, ja, ko, ar
-        "Text": text,
-    }
-
+async def translate_text(text: str, target_language: str):
     try:
-        response = await client.translate_text(**params)
+        response = client.translate_text(
+            Text=text,
+            SourceLanguageCode="auto",
+            TargetLanguageCode=target_language,  # en, es, fr, de, it, pt, nl, pl, ru, zh, ja, ko, ar
+        )
         return response["TranslatedText"]
     except Exception as e:
         raise (e)
