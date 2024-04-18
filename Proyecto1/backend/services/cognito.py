@@ -12,18 +12,13 @@ def register_user(username: str, password: str, name: str):
             ClientId=COGNITO_CLIENT_ID,
             Username=username,
             Password=password,
-            UserAttributes=[
-                {
-                    'Name': 'name',
-                    'Value': name
-                }
-            ]
+            UserAttributes=[{"Name": "name", "Value": name}],
         )
-        
+
         return response
     except client.exceptions.UsernameExistsException:
         return {"error": "Error registering user", "message": "El usuario ya existe."}
-    
+
     except Exception as e:
         raise e
 
@@ -38,8 +33,20 @@ def login_user(username: str, password: str):
         print(response)
         return response
     except client.exceptions.NotAuthorizedException:
-        return {"error": "Usuario o password incorrectos."}
+        return {
+            "error": "Error on log in",
+            "message": "Usuario o password incorrectos.",
+            "status": 401,
+        }
     except client.exceptions.UserNotFoundException:
-        return {"error": "Usuario no encontrado."}
+        return {
+            "error": "Error on log in",
+            "message": "Usuario no encontrado.",
+            "status": 404,
+        }
     except Exception as e:
-        return {"error": f"Error al iniciar sesión: {e}"}
+        return {
+            "error": "Error on log in",
+            "message": f"Error al iniciar sesión: {e}",
+            "status": 500,
+        }
