@@ -12,18 +12,14 @@ client = boto3.client(
 
 def rekognition_ocr(image) -> str:
     try:
-        response = client.detect_text(
-            Image={
-                'Bytes': image
-            }
-        )
-        
-        detected_text = ''
-        for item in response['TextDetections']:
-            if item['Type'] == 'LINE':
-                detected_text += item['DetectedText'] + '\n'
-                
+        response = client.detect_text(Image={"Bytes": image})
+
+        detected_text = ""
+        for item in response["TextDetections"]:
+            if item["Type"] == "LINE":
+                detected_text += item["DetectedText"] + "\n"
+
         return detected_text
-                
+
     except Exception as e:
         raise e
