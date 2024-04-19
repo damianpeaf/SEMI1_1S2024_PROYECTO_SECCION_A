@@ -2,7 +2,7 @@ CREATE EXTENSION IF NOT EXISTS citext;
 
 DROP TABLE IF EXISTS "user";
 CREATE TABLE "user" (
-    id PRIMARY KEY,
+    id varchar(200) PRIMARY KEY,
     username citext NOT NULL UNIQUE,
     name varchar(255) NOT NULL,
     password char(32) NOT NULL
@@ -40,13 +40,13 @@ CREATE TABLE role (
     id SERIAL PRIMARY KEY,
     privileges integer[] NOT NULL,
     name varchar(255) NOT NULL
-)
+);
 
 DROP TABLE IF EXISTS user_project;
 CREATE TABLE user_project (
     id SERIAL PRIMARY KEY,
     project_id int NOT NULL,
-    user_id int NOT NULL,
+    user_id varchar(200) NOT NULL,
     role_id int NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project(id),
     FOREIGN KEY (user_id) REFERENCES "user"(id),
@@ -61,7 +61,7 @@ CREATE TABLE task (
     image_url varchar(255) NOT NULL,
     notes text NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project(id)
-)
+);
 
 
 INSERT INTO privilege (name) VALUES ('Visualizar');
@@ -72,4 +72,3 @@ INSERT INTO privilege (name) VALUES ('Invitar');
 INSERT INTO role (privileges, name) VALUES ('{1,2,3,4}', 'Creador');
 INSERT INTO role (privileges, name) VALUES ('{1,2}', 'Colaborador');
 INSERT INTO role (privileges, name) VALUES ('{1}', 'Visualizador');
-

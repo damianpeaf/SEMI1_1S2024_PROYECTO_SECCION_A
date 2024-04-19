@@ -17,7 +17,7 @@ def register_user(username: str, password: str, name: str):
 
         return response
     except client.exceptions.UsernameExistsException:
-        return {"error": "Error registering user", "message": "El usuario ya existe."}
+        raise Exception("El usuario ya existe")
 
     except Exception as e:
         raise e
