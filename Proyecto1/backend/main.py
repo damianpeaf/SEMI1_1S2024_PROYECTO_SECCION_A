@@ -9,6 +9,7 @@ from routes.auth.login import router as login_router
 from routes.auth.register import router as register_router
 from routes.translate.translate_text import router as translate_router
 from routes.rekognition.ocr import router as ocr_router
+from routes.project.project import router as project_router
  
 # Create the FastAPI app
 app = FastAPI()
@@ -45,6 +46,7 @@ def read_root():
 # Set the routers
 app.include_router(register_router, prefix="/auth")
 app.include_router(login_router, prefix="/auth")
+app.include_router(project_router, prefix="/project")
 app.include_router(translate_router)
 app.include_router(ocr_router)
 

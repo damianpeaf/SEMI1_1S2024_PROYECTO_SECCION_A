@@ -10,7 +10,7 @@ class UserProjectModel:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO user_projects (user_id, project_id, role_id) VALUES (%s, %s, %s) RETURNING id",
+                    "INSERT INTO user_project (user_id, project_id, role_id) VALUES (%s, %s, %s) RETURNING id",
                     (user_project.user_id, user_project.project_id, user_project.role_id)
                 )
                 affected_rows = cursor.rowcount

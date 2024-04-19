@@ -11,7 +11,7 @@ class ProjectModel:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO projects (title, description, date_created, location, category) VALUES (%s, %s) RETURNING id",
+                    "INSERT INTO project (title, description, date_created, location, category) VALUES (%s, %s, %s, %s, %s) RETURNING id",
                     (project.title, project.description, time.strftime('%Y-%m-%d %H:%M:%S'), project.location, project.category)
                 )
                 affected_rows = cursor.rowcount
