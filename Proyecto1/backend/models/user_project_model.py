@@ -54,3 +54,21 @@ class UserProjectModel:
         except Exception as e:
             print(e)
             raise e
+        
+    @classmethod
+    def get_user_project(self, user_id: int, project_id: int):
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT * FROM user_project WHERE user_id = %s AND project_id = %s",
+                    (user_id, project_id)
+                )
+                user_project = cursor.fetchone()
+                connection.close()
+                return user_project
+
+        except Exception as e:
+            print(e)
+            raise e
