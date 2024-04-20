@@ -26,7 +26,7 @@ class ProjectModel:
             raise e
         
     @classmethod
-    def get_project_by_id(self, project_id: int):
+    def get_project_by_id(self, project_id: int) -> Project:
         try:
             connection = get_connection()
 
@@ -52,6 +52,26 @@ class ProjectModel:
                 cursor.execute(
                     "UPDATE project SET title = %s, description = %s, location = %s, category = %s WHERE id = %s",
                     (project.title, project.description, project.location, project.category, project.id)
+                )
+                affected_rows = cursor.rowcount
+                connection.commit()
+
+            connection.close()
+            return {"affected_rows": affected_rows}
+
+        except Exception as e:
+            print(e)
+            raise e
+        
+    @classmethod
+    def delete_project(self, project_id: int):
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "DELETE FROM project WHERE id = %s",
+                    (project_id,)
                 )
                 affected_rows = cursor.rowcount
                 connection.commit()
