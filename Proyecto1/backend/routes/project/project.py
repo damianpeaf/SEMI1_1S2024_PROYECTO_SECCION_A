@@ -211,3 +211,60 @@ async def delete_project(project_id: int, token: str = Depends(oauth2_scheme)):
     except Exception as e:
         print(e)
     return JSONResponse({"message": "Error deleting project", "status": 500}, 500)
+
+@router.post("/projects/{project_id}/members", response_model=dict, status_code=201)
+async def add_member_to_project(project_id: int, user_id: int, role_id: int, token: str = Depends(oauth2_scheme)):
+    try:
+        payload = Security.check_token(token)
+        if payload is not None:
+            user_id = payload["id"]
+            project = ProjectModel.get_project_by_id(project_id)
+            if project is None:
+                return JSONResponse({"message": "Project not found", "status": 404}, 404)
+
+            user_project = UserProjectModel.get_user_project(user_id, project_id)
+
+            if user_project is None:
+                return JSONResponse(
+                    {
+                        "error": "Unauthorized",
+                        "status": 401,
+                        "message": "User is not authorized to add members to this project",
+                    },
+                    401,
+                )
+
+            result_db = UserProjectModel.add_user_project(
+                UserProject(
+                    user_id=user_id,
+                    project_id=project_id,
+                    role_id=role_id
+                )
+            )
+
+            if result_db["affected_rows"] == 1:
+                response = {
+                    "message": "Member added successfully",
+                    "status": 200,
+                    "data": {
+                        "id": result_db["user_project_id"],
+                        "user_id": user_id,
+                        "project_id": project_id,
+                        "role_id": role_id
+                    }
+                }
+                return JSONResponse(response, 200)
+            else:
+                return JSONResponse(
+                {
+                    "error": "Error adding member",
+                    "status": 500,
+                    "message": "Error adding member on DB",
+                },
+                500,
+            )
+        else:
+            return JSONResponse({"message": "Unauthorized", "status": 401}, 401)
+    except Exception as e:
+        print(e)
+    return JSONResponse({"message": "Error adding member", "status": 500}, 500)
