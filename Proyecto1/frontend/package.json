@@ -7,22 +7,32 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migration:generate": "drizzle-kit generate:pg --config ./lib/database.config.ts"
+    "deploy-s3": "aws s3 rm s3://practica1-g6-paginaweb --recursive --profile sds1-s3 && aws s3 cp out/ s3://practica1-g6-paginaweb --recursive --profile sds1-s3"
   },
   "dependencies": {
-    "drizzle-kit": "^0.20.14",
-    "drizzle-orm": "^0.30.7",
-    "next": "14.1.2",
-    "pg": "^8.11.5",
+    "@hookform/resolvers": "^3.3.4",
+    "@nextui-org/react": "^2.2.9",
+    "axios": "^1.6.8",
+    "framer-motion": "^11.0.5",
+    "moment": "^2.30.1",
+    "next": "14.1.0",
+    "next-themes": "^0.2.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hook-form": "^7.50.1",
+    "react-icons": "^5.0.1",
+    "react-webcam": "^7.2.0",
+    "sonner": "^1.4.0",
+    "zod": "^3.22.4",
+    "zustand": "^4.5.1"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/pg": "^8.11.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
