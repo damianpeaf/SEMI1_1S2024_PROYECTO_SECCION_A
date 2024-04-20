@@ -1,12 +1,13 @@
 import { ProtectedRoute } from "@/components/routes/ProtectedRoute";
-import { Navbar } from "@/components/ui/Navbar";
+import { Layout } from "@/components/ui/layout/layout";
 import { ReactNode } from "react";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <ProtectedRoute>
-      <Navbar />
-      <section className="flex flex-col flex-grow">{children}</section>
+      <Layout>
+        <section className="flex flex-col flex-grow">{children}</section>
+      </Layout>
     </ProtectedRoute>
   );
 }

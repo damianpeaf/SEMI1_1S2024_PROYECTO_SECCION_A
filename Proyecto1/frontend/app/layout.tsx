@@ -7,8 +7,8 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FAUNADEX",
-  description: "FAUNADEX APP",
+  title: "Planorma",
+  description: "Planorma APP",
 };
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <Toaster />
-          <main className="dark text-foreground bg-background min-h-screen flex flex-col">
+          <main className="light text-foreground bg-background min-h-screen flex flex-col">
             {children}
           </main>
         </Providers>

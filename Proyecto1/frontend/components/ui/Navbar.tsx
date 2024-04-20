@@ -24,7 +24,7 @@ export const Navbar = () => {
           color="foreground"
           className="font-bold text-inherit"
         >
-          FAUNADEX
+          Planorama
         </Link>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
