@@ -39,6 +39,7 @@ async def get_projects_by_user(token: str = Depends(oauth2_scheme)):
         if payload is not None:
             user_id = payload["id"]
             projects = UserProjectModel.get_projects_by_user(user_id)
+            return JSONResponse({"message": "Projects retrieved successfully", "status": 200, "data": projects}, 200)
         else:
             return JSONResponse({"message": "Unauthorized", "status": 401}, 401)
     except Exception as e:
