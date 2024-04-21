@@ -37,7 +37,7 @@ class UserModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """SELECT * FROM \"user\" WHERE id = %s""",
-                    (user_id,),
+                    (user_id),
                 )
                     
                 result = cursor.fetchone()
@@ -63,4 +63,23 @@ class UserModel:
 
             return result
         except Exception as e:
+            raise e
+        
+    @classmethod
+    def get_user_id_by_username(self, username):
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT id FROM \"user\" WHERE username = %s""",
+                    (username),
+                )
+                
+                result = cursor.fetchone()[0]
+                connection.close()
+
+            return {"user_id": result}
+        except Exception as e:
+            print(e)
             raise e

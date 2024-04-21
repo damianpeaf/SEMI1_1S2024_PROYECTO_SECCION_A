@@ -44,7 +44,7 @@ class UserProjectModel:
                     JOIN role r ON up.role_id = r.id
                     WHERE up.user_id = %s
                     """
-                    (user_id,)
+                    (user_id)
                 )
                 projects = cursor.fetchall()
 
@@ -88,7 +88,7 @@ class UserProjectModel:
                     JOIN role r ON up.role_id = r.id
                     WHERE up.project_id = %s
                     """
-                    (project_id,)
+                    (project_id)
                 )
                 members = cursor.fetchall()
 
