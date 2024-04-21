@@ -31,9 +31,9 @@ export const useAuth = create<AuthState>((set, get) => ({
     if (session) {
       const sessionObj = JSON.parse(session);
       if (!sessionObj) return;
-      const { token, user } = sessionObj;
-      if (!token || !user) return;
-      set(() => ({ auth: { token, user }, status: "authenticated" }));
+      const { token } = sessionObj;
+      if (!token) return;
+      set(() => ({ auth: { token }, status: "authenticated" }));
     } else {
       set(() => ({ status: "unauthenticated", auth: null }));
     }

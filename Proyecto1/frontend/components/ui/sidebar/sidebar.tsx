@@ -39,7 +39,7 @@ export const SidebarWrapper = () => {
                 isActive={pathname === "/create-project"}
                 title="Crear Proyecto"
                 icon={<GoProject />}
-                href="accounts"
+                href="/create-project"
               />
             </SidebarMenu>
           </div>
