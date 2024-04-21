@@ -67,9 +67,15 @@ class UserProjectModel:
                     "SELECT * FROM user_project WHERE user_id = %s AND project_id = %s",
                     (user_id, project_id)
                 )
-                user_project = cursor.fetchone()[0]
+                user_project = cursor.fetchone()
                 connection.close()
-                return user_project
+
+                return {
+                    "id": user_project[0],
+                    "user_id": user_project[1],
+                    "project_id": user_project[2],
+                    "role_id": user_project[3]
+                }
 
         except Exception as e:
             print(e)

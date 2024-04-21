@@ -69,18 +69,28 @@ class ProjectExtraModel:
             raise e
         
     @classmethod
-    def post_project_extra(self, project_id, description, image_url):
+    def post_project_extra(self, project_id, notes, image_url):
         try:
             connection = get_connection()
 
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """INSERT INTO project_extra (project_id, description, image_url) VALUES (%s, %s, %s)""",
-                    (project_id, description, image_url),
-                )
 
+                if image_url is not None:
+                    cursor.execute(
+                        """INSERT INTO project_extra (project_id, notes, image_url) VALUES (%s, %s, %s) RETURNING id""",
+                        (project_id, notes, image_url),
+                    )
+                else:
+                    cursor.execute(
+                        """INSERT INTO project_extra (project_id, notes) VALUES (%s, %s) RETURNING id""",
+                        (project_id, notes),
+                    )
+
+                project_extra_id = cursor.fetchone()[0]
                 connection.commit()
                 connection.close()
+
+                return {"affected_rows": cursor.rowcount, "project_extra_id": project_extra_id }
         except Exception as e:
             raise e
             

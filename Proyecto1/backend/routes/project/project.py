@@ -1,4 +1,6 @@
+import time
 
+from typing import Optional
 from fastapi import APIRouter, Depends, Form, UploadFile, File
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
@@ -19,6 +21,7 @@ from models.entities.user_project import UserProject
 
 # Utils
 from utils.security import Security
+from services.s3 import upload_photo
 
 class ProjectData(BaseModel):
     name: str
@@ -303,24 +306,24 @@ async def get_members_by_project(project_id: int, token: str = Depends(oauth2_sc
     return JSONResponse({"message": "Error getting members", "status": 500}, 500)
 
 
-@router.post("/notes", response_model=dict, status_code=201)
+@router.post("/note", response_model=dict, status_code=201)
 async def add_note_to_project(
     token: str = Depends(oauth2_scheme),
     project_id: str = Form(None), 
     notes: str = Form(None),
-    image: UploadFile = File(None),
+    image: Optional[UploadFile] = File(None),
     ):
     try:
         payload = Security.check_token(token)
         if payload is not None:
             user_id = payload["id"]
-            project = ProjectModel.get_project_by_id(project_id)
+            project = ProjectModel.get_project_by_id(int(project_id))
             if project is None:
                 return JSONResponse({"message": "Project not found", "status": 404}, 404)
 
             user_project = UserProjectModel.get_user_project(user_id, project_id)
 
-            if user_project.role_id == RoleModel.get_role_by_name(Role.VIEWER).id:
+            if user_project["role_id"] == RoleModel.get_role_by_name(Role.VIEWER).id:
                 return JSONResponse(
                     {
                         "error": "Unauthorized",
@@ -329,10 +332,19 @@ async def add_note_to_project(
                     },
                     401,
                 )
+            
+            file_url = None
+
+            # upload file to s3
+
+            if image is not None:
+                timestamp = int(time.time())
+                file_location = f"Fotos_Publicadas/{project_id}/{timestamp}.jpg"
+                file_url = upload_photo(image.file, file_location)
 
             result_db = ProjectExtraModel.post_project_extra(
-                description=notes,
-                image_url=image,
+                notes=notes,
+                image_url=file_url,
                 project_id=project_id
             )
 
@@ -361,4 +373,5 @@ async def add_note_to_project(
             return JSONResponse({"message": "Unauthorized", "status": 401}, 401)
     except Exception as e:
         print(e)
+    return JSONResponse({"message": "Error adding note", "status": 500}, 500)
     
