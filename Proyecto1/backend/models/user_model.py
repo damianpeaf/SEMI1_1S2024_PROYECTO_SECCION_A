@@ -37,7 +37,7 @@ class UserModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """SELECT * FROM \"user\" WHERE id = %s""",
-                    (user_id),
+                    (user_id,),
                 )
                     
                 result = cursor.fetchone()
@@ -73,7 +73,7 @@ class UserModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """SELECT id FROM \"user\" WHERE username = %s""",
-                    (username),
+                    (username,),
                 )
                 
                 result = cursor.fetchone()[0]

@@ -32,21 +32,23 @@ class UserProjectModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    SELECT p.id, p.name, p.description, p.created_at 
-                    r.name as role_name
-                    ARRAY(
-                        SELECT id, name
-                        from privilege
-                        where id = ANY(r.privileges)
-                    ) as role_privileges
-                    FROM projects p
-                    JOIN user_projects up ON p.id = up.project_id
-                    JOIN role r ON up.role_id = r.id
-                    WHERE up.user_id = %s
-                    """
-                    (user_id)
+                    SELECT p.id,
+                    p.title,
+                    p.description,
+                    r.name as role_name,
+                        ARRAY(
+                            SELECT id
+                            from privilege
+                            where id = ANY(r.privileges)
+                        ) as role_privileges
+                        FROM project p
+                        JOIN user_project up ON p.id = up.project_id
+                        JOIN role r ON up.role_id = r.id
+                        WHERE up.user_id = %s
+                    """,
+                    (user_id,)
                 )
-                projects = cursor.fetchall()
+                projects = cursor.fetchone()
 
             connection.close()
             return projects
@@ -65,7 +67,7 @@ class UserProjectModel:
                     "SELECT * FROM user_project WHERE user_id = %s AND project_id = %s",
                     (user_id, project_id)
                 )
-                user_project = cursor.fetchone()
+                user_project = cursor.fetchone()[0]
                 connection.close()
                 return user_project
 
@@ -87,8 +89,8 @@ class UserProjectModel:
                     JOIN user_project up ON u.id = up.user_id
                     JOIN role r ON up.role_id = r.id
                     WHERE up.project_id = %s
-                    """
-                    (project_id)
+                    """,
+                    (project_id,)
                 )
                 members = cursor.fetchall()
 

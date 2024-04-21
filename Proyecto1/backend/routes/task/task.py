@@ -184,6 +184,7 @@ async def post_task(
     ):
     try:
         payload = Security.check_token(token)
+        file_url = None
 
         if payload is None:
             return JSONResponse(
@@ -195,10 +196,10 @@ async def post_task(
             )
         
         # upload file to s3
-
-        timestamp = int(time.time())
-        file_location = f"Fotos_Publicadas/{project_id}/{timestamp}.jpg"
-        file_url = upload_photo(image.file, file_location) if image is not None else ''
+        if image is not None:
+            timestamp = int(time.time())
+            file_location = f"Fotos_Publicadas/{project_id}/{timestamp}.jpg"
+            file_url = upload_photo(image.file, file_location) if image is not None else ''
 
 
         task = TaskModel.post_task(

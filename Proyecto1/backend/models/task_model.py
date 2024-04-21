@@ -10,7 +10,7 @@ class TaskModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """SELECT * FROM task WHERE project_id = %s""",
-                    (project_id),
+                    (project_id,),
                 )
 
                 result = cursor.fetchall()
@@ -63,7 +63,7 @@ class TaskModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """DELETE FROM task WHERE id = %s""",
-                    (task_id),
+                    (task_id,),
                 )
                 
                 affected_rows = cursor.rowcount

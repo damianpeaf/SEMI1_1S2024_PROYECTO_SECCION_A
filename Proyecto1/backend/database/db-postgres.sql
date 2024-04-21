@@ -24,8 +24,7 @@ CREATE TABLE project_extra (
     id SERIAL PRIMARY KEY,
     project_id int NOT NULL,
     notes text NOT NULL,
-    image_url varchar(255) NOT NULL,
-    extra_type varchar(255) NOT NULL,
+    image_url varchar(255) NULL,
     FOREIGN KEY (project_id) REFERENCES project(id)
 );
 

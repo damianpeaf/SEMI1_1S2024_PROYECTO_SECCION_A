@@ -33,7 +33,7 @@ class ProjectModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     "SELECT * FROM project WHERE id = %s",
-                    (project_id)
+                    (project_id,)
                 )
                 project = cursor.fetchone()
                 connection.close()
@@ -94,7 +94,7 @@ class ProjectModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     "DELETE FROM project WHERE id = %s",
-                    (project_id)
+                    (project_id,)
                 )
                 affected_rows = cursor.rowcount
                 connection.commit()
