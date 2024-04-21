@@ -21,19 +21,35 @@ class TaskModel:
             raise e
         
     @classmethod
-    def put_task(self, task: Task):
+    def put_task(self, task_id, state=None, image_url=None, notes=None):
         try:
             connection = get_connection()
 
             with connection.cursor() as cursor:
-                cursor.execute(
-                    """UPDATE task SET state = %s, image_url = %s, notes = %s WHERE id = %s""",
-                    (task.state, task.image_url, task.notes, task.id),
-                )
+                query = "UPDATE task SET "
+                params = []
                 
+                if state is not None:
+                    query += "state = %s, "
+                    params.append(state)
+                    
+                if image_url is not None:
+                    query += "image_url = %s, "
+                    params.append(image_url)
+                    
+                if notes is not None:
+                    query += "notes = %s, "
+                    params.append(notes)
+                
+                query = query[:-2] + " WHERE id = %s"
+                params.append(task_id)
+                
+                cursor.execute(query, params)
+                    
                 affected_rows = cursor.rowcount
-                connection.close()
+                connection.commit()
 
+            connection.close()
             return {"affected_rows": affected_rows}
         except Exception as e:
             raise e

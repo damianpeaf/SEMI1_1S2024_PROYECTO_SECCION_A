@@ -125,13 +125,11 @@ async def update_project(project_id: int, project_data: ProjectData, token: str 
             )
 
         result_db = ProjectModel.update_project(
-            Project(
-                id=project_id,
-                title=project_data.name,
-                description=project_data.description,
+                project_id=project_id,
                 category=project_data.category,
-                location=project_data.location
-            )
+                description=project_data.description,
+                location=project_data.location,
+                title=project_data.name
         )
 
         if result_db["affected_rows"] != 1:

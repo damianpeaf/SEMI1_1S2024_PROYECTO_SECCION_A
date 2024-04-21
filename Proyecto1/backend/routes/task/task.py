@@ -1,22 +1,21 @@
-from fastapi import APIRouter, Depends
+import time
+
+from typing import Optional
+from fastapi import APIRouter, Depends, Form, UploadFile, File
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
-from pydantic import BaseModel
+
+from models.entities.task import Task
 
 from models.task_model import TaskModel
 
 from utils.security import Security
 
+from services.s3 import upload_photo
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter()
-
-class TaskData(BaseModel):
-    id: int
-    state: str
-    image_url: str
-    notes: str
-
 
 @router.get("/tasks", response_model=dict, status_code=200)
 async def get_tasks(token: str = Depends(oauth2_scheme), project_id: int = None):
@@ -65,7 +64,13 @@ async def get_tasks(token: str = Depends(oauth2_scheme), project_id: int = None)
 
 
 @router.put("/task", response_model=dict, status_code=200)
-async def put_task(token: str = Depends(oauth2_scheme), data: TaskData = None):
+async def put_task(
+    token: Optional[str] = Depends(oauth2_scheme),
+    task_id: str = Form(None),
+    state: Optional[str] = Form(None),
+    notes: Optional[str] = Form(None),
+    image: Optional[UploadFile] = File(None),
+    ):
 
     try:
         payload = Security.check_token(token)
@@ -78,8 +83,24 @@ async def put_task(token: str = Depends(oauth2_scheme), data: TaskData = None):
                 },
                 401,
             )
+        
+        project_id = int(project_id)
 
-        task = TaskModel.put_task(data)
+        file_url = None
+
+        # upload file to s3
+
+        if image is not None:
+            timestamp = int(time.time())
+            file_location = f"Fotos_Publicadas/{project_id}/{timestamp}.jpg"
+            file_url = upload_photo(image.file, file_location)
+
+        task = TaskModel.put_task(
+            task_id=task_id,
+            state=state,
+            image_url=file_url,
+            notes=notes,
+        )
 
         if task is None:
             return JSONResponse(
@@ -154,7 +175,13 @@ async def delete_task(token: str = Depends(oauth2_scheme), task_id: int = None):
     )
 
 @router.post("/task", response_model=dict, status_code=200)
-async def post_task(token: str = Depends(oauth2_scheme), data: TaskData = None):
+async def post_task(
+    token: str = Depends(oauth2_scheme),
+    project_id: int = Form(None),
+    state: str = Form(None),
+    notes: str = Form(None),
+    image: UploadFile = File(None),
+    ):
     try:
         payload = Security.check_token(token)
 
@@ -166,8 +193,22 @@ async def post_task(token: str = Depends(oauth2_scheme), data: TaskData = None):
                 },
                 401,
             )
+        
+        # upload file to s3
 
-        task = TaskModel.post_task(data)
+        timestamp = int(time.time())
+        file_location = f"Fotos_Publicadas/{project_id}/{timestamp}.jpg"
+        file_url = upload_photo(image.file, file_location) if image is not None else ''
+
+
+        task = TaskModel.post_task(
+            Task(
+                project_id=project_id,
+                state=state,
+                notes=notes,
+                image_url=file_url
+            )
+        )
 
         if task is None:
             return JSONResponse(

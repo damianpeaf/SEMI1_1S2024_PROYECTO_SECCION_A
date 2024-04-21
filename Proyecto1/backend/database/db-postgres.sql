@@ -58,7 +58,7 @@ CREATE TABLE task (
     id SERIAL PRIMARY KEY,
     project_id int NOT NULL,
     state varchar(255) NOT NULL,
-    image_url varchar(255) NOT NULL,
+    image_url varchar(255) NULL,
     notes text NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project(id)
 );

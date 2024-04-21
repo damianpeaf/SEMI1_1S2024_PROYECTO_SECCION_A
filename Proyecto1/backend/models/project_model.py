@@ -44,15 +44,38 @@ class ProjectModel:
             raise e
         
     @classmethod
-    def update_project(self, project: Project):
+    def update_project(self, project_id, title=None, description=None, location=None, category=None):
         try:
             connection = get_connection()
 
             with connection.cursor() as cursor:
-                cursor.execute(
-                    "UPDATE project SET title = %s, description = %s, location = %s, category = %s WHERE id = %s",
-                    (project.title, project.description, project.location, project.category, project.id)
-                )
+                query = "UPDATE project SET "
+                params = []
+
+                if title is not None:
+                    query += "title = %s, "
+                    params.append(title)
+
+                if description is not None:
+                    query += "description = %s, "
+                    params.append(description)
+
+                if location is not None:
+                    query += "location = %s, "
+                    params.append(location)
+
+                if category is not None:
+                    query += "category = %s, "
+                    params.append(category)
+
+                # Eliminar la coma y el espacio adicionales al final de la consulta
+                query = query[:-2]
+
+                # Agregar la condición WHERE
+                query += " WHERE id = %s"
+                params.append(project_id)
+
+                cursor.execute(query, params)
                 affected_rows = cursor.rowcount
                 connection.commit()
 
