@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import {
   Avatar,
   Dropdown,
@@ -9,6 +10,8 @@ import {
 import React from "react";
 
 export const UserDropdown = () => {
+  const { logout } = useAuth();
+
   return (
     <Dropdown>
       <NavbarItem>
@@ -33,8 +36,13 @@ export const UserDropdown = () => {
           <p>damianpeaf@gmail.com</p>
         </DropdownItem>
         <DropdownItem key="settings">Ajustes</DropdownItem>
-        <DropdownItem key="logout" color="danger" className="text-danger ">
-          Log Out
+        <DropdownItem
+          key="logout"
+          color="danger"
+          className="text-danger "
+          onClick={logout}
+        >
+          Cerrar sesión
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

@@ -23,9 +23,6 @@ export const RegisterSchema = z
     confirmPassword: z
       .string()
       .min(4, { message: "La contraseña debe tener al menos 4 carácteres" }),
-    profileImage: z
-      .any()
-      .refine((val) => val?.length > 0, "Imagen de perfil requerida"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Las contraseñas no coinciden",
@@ -51,19 +48,12 @@ export const SignupForm = () => {
   });
 
   const onSubmit: SubmitHandler<TRegisterSchema> = async (data) => {
-    console.log({
-      data,
-    });
-    // username, name, password, image as MultiPart
-    const formData = new FormData();
-    formData.append("username", data.username);
-    formData.append("name", data.name);
-    formData.append("password", data.password);
-    formData.append("image", data.profileImage[0]);
-
     const resp = await registerApi.call({
-      body: formData,
-      formData: true,
+      body: {
+        username: data.username,
+        name: data.name,
+        password: data.password,
+      },
       successMessage: "Usuario registrado exitosamente",
       errorMessage: ({ error }) => {
         return `Error al registrar usuario. ${error.message}`;
@@ -111,10 +101,6 @@ export const SignupForm = () => {
         errorMessage={<>{errors.confirmPassword?.message}</>}
         control={control}
         name="confirmPassword"
-      />
-      <ImageInput
-        {...register("profileImage")}
-        errorMessage={errors.profileImage?.message?.toString() || ""}
       />
       <Button
         color="primary"

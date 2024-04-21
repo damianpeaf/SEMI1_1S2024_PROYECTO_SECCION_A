@@ -9,7 +9,6 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  return <>{children}</>;
   const { status } = useAuth();
 
   const router = useRouter();

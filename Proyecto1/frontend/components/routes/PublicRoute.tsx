@@ -9,7 +9,6 @@ interface PublicRouteProps {
 }
 
 export const PublicRoute = ({ children }: PublicRouteProps) => {
-  return <>{children}</>;
   const { status } = useAuth();
   const router = useRouter();
 

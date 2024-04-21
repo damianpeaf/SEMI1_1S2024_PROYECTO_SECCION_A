@@ -7,7 +7,6 @@ import { z } from "zod";
 import { PasswordInput } from "@/components/forms/PasswordInput";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useApi } from "@/hooks/useApi";
-import { FullUser } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import { ApiResponse } from "@/types/Api";
 
@@ -35,15 +34,11 @@ export const LoginForm = () => {
 
   const { login } = useAuth();
 
-  const { call: postLogin } = useApi<
-    ApiResponse<{
-      userid: string;
-      name: string;
-      username: string;
-      image: string;
-      jwt: string;
-    }>
-  >({
+  const { call: postLogin } = useApi<{
+    message: string;
+    status: number;
+    token: string;
+  }>({
     endpointPath: "auth/login",
     method: "POST",
   });
@@ -60,15 +55,8 @@ export const LoginForm = () => {
     if (!userInformation) return;
     reset();
 
-    const { jwt, userid, name, username, image } = userInformation.data;
-
-    login(jwt, {
-      id: +userid,
-      name,
-      username,
-      photoUrl: image,
-      password: "",
-    });
+    const { token } = userInformation;
+    login(token);
   };
 
   return (
