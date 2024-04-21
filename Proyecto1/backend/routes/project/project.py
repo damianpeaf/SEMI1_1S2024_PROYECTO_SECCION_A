@@ -268,3 +268,38 @@ async def add_member_to_project(project_id: int, user_id: int, role_id: int, tok
     except Exception as e:
         print(e)
     return JSONResponse({"message": "Error adding member", "status": 500}, 500)
+
+@router.get("/projects/{project_id}/members", response_model=dict, status_code=200)
+async def get_members_by_project(project_id: int, token: str = Depends(oauth2_scheme)):
+    try:
+        payload = Security.check_token(token)
+        if payload is not None:
+            user_id = payload["id"]
+            project = ProjectModel.get_project_by_id(project_id)
+            if project is None:
+                return JSONResponse({"message": "Project not found", "status": 404}, 404)
+
+            user_project = UserProjectModel.get_user_project(user_id, project_id)
+
+            if user_project is None:
+                return JSONResponse(
+                    {
+                        "error": "Unauthorized",
+                        "status": 401,
+                        "message": "User is not authorized to get members of this project",
+                    },
+                    401,
+                )
+
+            members = UserProjectModel.get_members_by_project(project_id)
+            response = {
+                "message": "Members retrieved successfully",
+                "status": 200,
+                "data": members
+            }
+            return JSONResponse(response, 200)
+        else:
+            return JSONResponse({"message": "Unauthorized", "status": 401}, 401)
+    except Exception as e:
+        print(e)
+    return JSONResponse({"message": "Error getting members", "status": 500}, 500)

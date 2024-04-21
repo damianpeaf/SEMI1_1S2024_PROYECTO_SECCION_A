@@ -72,3 +72,29 @@ class UserProjectModel:
         except Exception as e:
             print(e)
             raise e
+        
+
+    @classmethod
+    def get_members_by_project(self, project_id: int):
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT u.id, u.name, u.email, r.name as role_name
+                    FROM users u
+                    JOIN user_project up ON u.id = up.user_id
+                    JOIN role r ON up.role_id = r.id
+                    WHERE up.project_id = %s
+                    """
+                    (project_id,)
+                )
+                members = cursor.fetchall()
+
+            connection.close()
+            return members
+
+        except Exception as e:
+            print(e)
+            raise e
