@@ -19,3 +19,11 @@ export enum ProjectPriviliges {
 }
 
 export type RoleT = "Creador" | "Colaborador" | "Visualizador"
+
+export interface TaskI {
+    id: number;
+    state: string;
+    notes: string;
+    project_id: number;
+    image_url: string | null;
+}

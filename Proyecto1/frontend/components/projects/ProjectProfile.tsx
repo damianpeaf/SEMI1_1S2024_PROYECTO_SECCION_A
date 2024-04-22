@@ -3,11 +3,12 @@
 import { useApi } from "@/hooks/useApi";
 import { ProjectI, RoleT } from "@/types/Project";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MiniLoader } from "../routes/Loader";
 import { ProjectForm } from "./ProjectForm";
 import { Button } from "@nextui-org/react";
 import { MdDelete } from "react-icons/md";
+import { ProjectNotes } from "./ProjectNotes";
 
 interface GetProjectInfoI {
   message: string;
@@ -133,6 +134,7 @@ export const ProjectProfile = () => {
         }}
         actionButtonText="Actualizar proyecto"
       />
+      <ProjectNotes projectId={id} />
     </div>
   );
 };

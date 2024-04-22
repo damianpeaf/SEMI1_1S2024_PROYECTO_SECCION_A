@@ -8,6 +8,7 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 import React from "react";
+import { BiUser } from "react-icons/bi";
 
 export const UserDropdown = () => {
   const { logout } = useAuth();
@@ -16,23 +17,12 @@ export const UserDropdown = () => {
     <Dropdown>
       <NavbarItem>
         <DropdownTrigger>
-          <Avatar
-            as="button"
-            color="secondary"
-            size="md"
-            src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-          />
+          <Avatar as="button" color="default" size="md">
+            <BiUser />
+          </Avatar>
         </DropdownTrigger>
       </NavbarItem>
       <DropdownMenu aria-label="User menu actions">
-        <DropdownItem
-          key="profile"
-          className="flex flex-col justify-start w-full items-start"
-        >
-          <p>Inicio de sesión como: </p>
-          <p>damianpeaf@gmail.com</p>
-        </DropdownItem>
-        <DropdownItem key="settings">Ajustes</DropdownItem>
         <DropdownItem
           key="logout"
           color="danger"

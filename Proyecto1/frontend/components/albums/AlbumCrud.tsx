@@ -6,10 +6,8 @@ import { FaTrash } from "react-icons/fa";
 import { Table } from "../ui/Table";
 import { useEffect, useState } from "react";
 import { AlbumModal } from "./AlbumModal";
-import { Album } from "@/types/Album";
 import { useApi } from "@/hooks/useApi";
 import { ApiResponse } from "@/types/Api";
-import { Loader } from "../routes/Loader";
 
 export interface GetAlbumResponseT {
   albums: Albums[];

@@ -2,6 +2,34 @@ from database.db import get_connection
 from models.entities.task import Task
 
 class TaskModel:
+
+    @classmethod
+    def get_task_by_id(self, task_id):
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """SELECT * FROM task WHERE id = %s""",
+                    (task_id,),
+                )
+
+                result = cursor.fetchone()
+                connection.close()
+
+                if result is None:
+                    return None
+
+                return {
+                    "id": result[0],
+                    "project_id": result[1],
+                    "state": result[2],
+                    "image_url": result[3],
+                    "notes": result[4],
+                }
+        except Exception as e:
+            raise e
+
     @classmethod
     def get_tasks(self, project_id):
         try:
@@ -16,7 +44,19 @@ class TaskModel:
                 result = cursor.fetchall()
                 connection.close()
 
-            return result
+                formated_tasks = []
+                for task in result:
+                    formated_tasks.append(
+                        {
+                            "id": task[0],
+                            "project_id": task[1],
+                            "state": task[2],
+                            "image_url": task[3],
+                            "notes": task[4],
+                        }
+                    )
+
+            return formated_tasks
         except Exception as e:
             raise e
         
@@ -85,6 +125,7 @@ class TaskModel:
                 )
                 
                 affected_rows = cursor.rowcount
+                connection.commit()
                 connection.close()
 
             return {"affected_rows": affected_rows}

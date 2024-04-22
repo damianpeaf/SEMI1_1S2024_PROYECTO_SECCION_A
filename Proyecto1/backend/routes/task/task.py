@@ -29,7 +29,7 @@ async def get_tasks(token: str = Depends(oauth2_scheme), project_id: int = None)
                     "status": 401,
                 },
                 401,
-            )
+            )       
 
         response = TaskModel.get_tasks(project_id)
 
@@ -71,6 +71,7 @@ async def put_task(
     notes: Optional[str] = Form(None),
     image: Optional[UploadFile] = File(None),
     ):
+    print('tasasdas dasd asdk')
 
     try:
         payload = Security.check_token(token)
@@ -84,7 +85,8 @@ async def put_task(
                 401,
             )
         
-        project_id = int(project_id)
+        target_task = TaskModel.get_task_by_id(task_id)
+        project_id = int(target_task['project_id'])
 
         file_url = None
 
