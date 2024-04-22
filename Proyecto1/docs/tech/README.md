@@ -52,6 +52,10 @@ Se utilizarón los siguientes servicios:
 
 ## Presupuesto
 
+Dentro del presupuesto, hemos incluido los servicios incluidos en la arquitectura implementada. El número de peticiones utilizadas es un aproximado de las peticiones que se realizarían en un mes.
+
+<img src="./imgs/presupuesto.png" width="500">
+
 ## Servicios utilizados
 Se implementaron servicios de AWS para determinadas funciones y requerimientos de la página.
 
