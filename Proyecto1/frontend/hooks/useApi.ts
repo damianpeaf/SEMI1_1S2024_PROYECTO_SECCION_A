@@ -2,9 +2,11 @@ import { useState } from "react";
 import { toast as displayToast } from "sonner";
 import { useAuth } from "./useAuth";
 
-// const baseUrl = "http://balanceador-sds1-793954245.us-east-1.elb.amazonaws.com";
+export  const baseUrl = "http://planorma-1546993192.us-east-1.elb.amazonaws.com";
 // const baseUrl = "http://localhost:3001";
-export const baseUrl = "http://localhost:8000";
+//export const baseUrl = "http://localhost:8000";
+// export const baseUrl = "http://localhost:8000";
+
 
 interface UseApiConfig {
   endpointPath: string;

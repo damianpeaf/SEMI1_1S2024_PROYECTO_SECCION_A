@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy-s3": "aws s3 rm s3://practica1-g6-paginaweb --recursive --profile sds1-s3 && aws s3 cp out/ s3://practica1-g6-paginaweb --recursive --profile sds1-s3"
+    "deploy-s3": "aws s3 rm s3://planorma --recursive --profile sds1-s3 && aws s3 cp out/ s3://planorma --recursive --profile sds1-s3"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",

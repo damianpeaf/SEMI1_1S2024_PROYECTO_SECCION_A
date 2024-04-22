@@ -3,6 +3,7 @@ import { useApi } from "@/hooks/useApi";
 import { ApiResponse } from "@/types/Api";
 import { ProjectForm, TLoginSchema } from "./ProjectForm";
 import { toast } from "sonner";
+import { ProjectI } from "@/types/Project";
 
 export const CreateProject = () => {
   const { call: createApi } = useApi<ApiResponse<ProjectI>>({
