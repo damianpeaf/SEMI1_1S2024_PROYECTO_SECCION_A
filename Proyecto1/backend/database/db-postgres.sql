@@ -16,7 +16,8 @@ CREATE TABLE project (
     description text NOT NULL,
     date_created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     location varchar(255) NOT NULL,
-    category varchar(255) NOT NULL
+    category varchar(255) NOT NULL,
+    date_deleted timestamp NULL
 );
 
 DROP TABLE IF EXISTS project_extra;

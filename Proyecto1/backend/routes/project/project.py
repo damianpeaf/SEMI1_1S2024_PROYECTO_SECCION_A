@@ -63,7 +63,7 @@ async def create_project(project_data: ProjectData, token: str = Depends(oauth2_
                     location=project_data.location
                 )
             )
-
+            print(new_project)
             result_db = UserProjectModel.add_user_project(
                 UserProject(
                     user_id=user_id,
@@ -71,6 +71,7 @@ async def create_project(project_data: ProjectData, token: str = Depends(oauth2_
                     role_id=RoleModel.get_role_by_name(Role.OWNER).id
                 )
             )
+            print(result_db)
 
             if result_db["affected_rows"] == 1:
                 response = {
@@ -184,8 +185,11 @@ async def delete_project(project_id: int, token: str = Depends(oauth2_scheme)):
                 },
                 401,
             )
+        
+        project = ProjectModel.get_project_by_id(project_id)
 
         result_db = ProjectModel.delete_project(project_id)
+        print(result_db)
 
         if result_db["affected_rows"] != 1:
             return JSONResponse(
@@ -196,18 +200,11 @@ async def delete_project(project_id: int, token: str = Depends(oauth2_scheme)):
                 },
                 500,
             )
-        response = {
+        return JSONResponse({
             "message": "Project deleted successfully",
             "status": 200,
-            "data": {
-                "id": project_id,
-                "name": project.title,
-                "description": project.description,
-                "category": project.category,
-                "location": project.location
-            }
-        }
-        return JSONResponse(response, 200)
+            "data": project
+        }, 200)
 
     except Exception as e:
         print(e)
@@ -270,8 +267,8 @@ async def add_member_to_project(project_id: int, user_id: int, role_id: int, tok
         print(e)
     return JSONResponse({"message": "Error adding member", "status": 500}, 500)
 
-@router.get("/projects/{project_id}/members", response_model=dict, status_code=200)
-async def get_members_by_project(project_id: int, token: str = Depends(oauth2_scheme)):
+@router.get("/projects/{project_id}", response_model=dict, status_code=200)
+async def get_project_info(project_id: int, token: str = Depends(oauth2_scheme)):
     try:
         payload = Security.check_token(token)
         if payload is not None:
@@ -293,10 +290,11 @@ async def get_members_by_project(project_id: int, token: str = Depends(oauth2_sc
                 )
 
             members = UserProjectModel.get_members_by_project(project_id)
+            project["members"] = members
             response = {
                 "message": "Members retrieved successfully",
                 "status": 200,
-                "data": members
+                "data": project
             }
             return JSONResponse(response, 200)
         else:

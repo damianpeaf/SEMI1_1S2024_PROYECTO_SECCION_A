@@ -9,8 +9,9 @@ s3 = boto3.client(
 
 def upload_photo(file, file_key) -> str:
     try:
-        s3.upload_fileobj(file, config("S3_BUCKET"), file_key)
-        file_url = file_url = f"https://{config("S3_BUCKET")}.s3.amazonaws.com/{file_key}"       
+        bucket_name = config("S3_BUCKET")
+        s3.upload_fileobj(file, bucket_name, file_key)
+        file_url = f"https://{bucket_name}.s3.amazonaws.com/{file_key}"       
         return file_url
     except Exception as e:
         raise e

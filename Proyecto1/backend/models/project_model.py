@@ -32,12 +32,27 @@ class ProjectModel:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT * FROM project WHERE id = %s",
+                    "SELECT * FROM project WHERE id = %s AND date_deleted IS NULL",
                     (project_id,)
                 )
                 project = cursor.fetchone()
                 connection.close()
-                return project
+
+                if project is None:
+                    return None
+                
+                # To ISO
+                date_created = project[3].isoformat()
+                
+                formated_project = {
+                    "id": project[0],
+                    "title": project[1],
+                    "description": project[2],
+                    "date_created": date_created,
+                    "location": project[4],
+                    "category": project[5]
+                }
+                return formated_project
 
         except Exception as e:
             print(e)
@@ -93,9 +108,10 @@ class ProjectModel:
 
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "DELETE FROM project WHERE id = %s",
-                    (project_id,)
+                    "UPDATE project SET date_deleted = %s WHERE id = %s",
+                    (time.strftime('%Y-%m-%d %H:%M:%S'), project_id)
                 )
+
                 affected_rows = cursor.rowcount
                 connection.commit()
 

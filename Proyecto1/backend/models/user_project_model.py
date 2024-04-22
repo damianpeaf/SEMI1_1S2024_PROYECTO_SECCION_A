@@ -44,14 +44,23 @@ class UserProjectModel:
                         FROM project p
                         JOIN user_project up ON p.id = up.project_id
                         JOIN role r ON up.role_id = r.id
-                        WHERE up.user_id = %s
+                        WHERE up.user_id = %s AND p.date_deleted IS NULL
                     """,
                     (user_id,)
                 )
-                projects = cursor.fetchone()
+                projects = cursor.fetchall()
 
+                formatedProjects = []
+                for project in projects:
+                    formatedProjects.append({
+                        "id": project[0],
+                        "title": project[1],
+                        "description": project[2],
+                        "role_name": project[3],
+                        "role_privileges": project[4]
+                    })
             connection.close()
-            return projects
+            return formatedProjects
 
         except Exception as e:
             print(e)
@@ -90,8 +99,8 @@ class UserProjectModel:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    SELECT u.id, u.name, u.email, r.name as role_name
-                    FROM users u
+                    SELECT u.id, u.name, u.username, r.name as role_name
+                    FROM "user" u
                     JOIN user_project up ON u.id = up.user_id
                     JOIN role r ON up.role_id = r.id
                     WHERE up.project_id = %s
@@ -99,9 +108,17 @@ class UserProjectModel:
                     (project_id,)
                 )
                 members = cursor.fetchall()
+                formated_members = []
+                for member in members:
+                    formated_members.append({
+                        "id": member[0],
+                        "name": member[1],
+                        "username": member[2],
+                        "role_name": member[3]
+                    })
 
             connection.close()
-            return members
+            return formated_members
 
         except Exception as e:
             print(e)
