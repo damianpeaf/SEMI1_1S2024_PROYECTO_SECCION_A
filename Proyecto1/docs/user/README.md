@@ -39,6 +39,8 @@ Para registrarse en la página web, es necesario que el usuario complete el form
 - Correo
 - Contraseña
 
+<img src="./imgs/11.jpg" alt="Registro de usuario" width="500"/>
+
 Luego de registrarte en la página web, recibirás un correo electrónico
 
 <img src="./imgs/3.jpg" alt="Registro de usuario" width="500"/>
@@ -49,6 +51,8 @@ Para iniciar sesión en la página web, es necesario que el usuario complete el 
 
 - Correo
 - Contraseña
+
+<img src="./imgs/9.jpg" alt="Inicio de sesión" width="500"/>
 
 ### Dashboard de proyectos
 
@@ -72,7 +76,7 @@ Para crear un proyecto, es necesario que el usuario complete el formulario de cr
 
 Puedes encontrar el botón para crearlo en el menú lateral izquierdo.
 
-<img src="./imgs/4.jpg" alt="Creación de proyecto" width="500"/>
+<img src="./imgs/7.jpg" alt="Creación de proyecto" width="500"/>
 
 ### Edición de proyecto
 
@@ -102,6 +106,10 @@ Esto depende de los permisos que tenga el usuario en el proyecto.
 
 Puedes agregar una imagen a la tarea para facilitar la comprensión de la misma de manera opcional
 
+<img src="./imgs/6.jpg" alt="Agregar tarea" width="500"/>
+
+También puedes traducir el texto de la tarea a distintos idiomas.
+
 ### Editar tarea
 
 Para editar una tarea, debes de presionar el botón de editar tarea que se encuentra en la parte inferior de la tarjeta de la tarea.
@@ -123,6 +131,21 @@ Los roles que puedes asignar a un usuario son:
 - Administrador
 - Colaborador
 - Lector
+
+<img src="./imgs/8.jpg" alt="Agregar usuario a proyecto" width="500"/>
+
+También puedes visualizar una lista de usuarios que han sido agregados al proyecto.
+
+<img src="./imgs/12.jpg" alt="Lista de usuarios en proyecto" width="500"/>
+
+Puedes buscar un usuario por su correo electronico, si el usuario no se encuentra, entonces no se mostrará ninguna coincidencia
+
+# Cerrar sesión
+
+Para cerrar sesión, puedes presionar el botón de cerrar sesión que se encuentra en la parte superior derecha de la pantalla.
+
+<img src="./imgs/10.jpg" alt="Cerrar sesión" width="500"/>
+
 
 ### Traducción de texto
 
