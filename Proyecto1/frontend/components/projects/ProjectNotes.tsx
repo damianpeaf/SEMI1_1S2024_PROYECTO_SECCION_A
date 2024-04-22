@@ -33,6 +33,10 @@ export const ProjectNotes = ({ projectId }: ProjectNotesI) => {
     endpointPath: "task/tasks",
     method: "GET",
   });
+  const deleteApi = useApi({
+    endpointPath: "task/task",
+    method: "DELETE",
+  });
   const [modalInfo, setModalInfo] = useState({
     task: null as TaskI | null,
     isOpen: false,
@@ -44,6 +48,19 @@ export const ProjectNotes = ({ projectId }: ProjectNotesI) => {
     const res = await getApi.call({
       params: {
         project_id: projectId,
+      },
+    });
+  };
+
+  const onDeleteTask = async (taskId: string) => {
+    await deleteApi.call({
+      resourceId: taskId,
+      successMessage({ data, error }) {
+        getTasks();
+        return "Tarea eliminada correctamente";
+      },
+      errorMessage({ data, error }) {
+        return "Ocurrió un error al eliminar la tarea";
       },
     });
   };
@@ -102,7 +119,13 @@ export const ProjectNotes = ({ projectId }: ProjectNotesI) => {
                 >
                   <MdEdit />
                 </Button>
-                <Button color="danger" size="sm" onClick={() => {}}>
+                <Button
+                  color="danger"
+                  size="sm"
+                  onClick={() => {
+                    onDeleteTask(task.id);
+                  }}
+                >
                   <IoMdTrash />
                 </Button>
               </div>

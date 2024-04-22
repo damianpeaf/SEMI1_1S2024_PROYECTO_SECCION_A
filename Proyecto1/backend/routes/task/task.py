@@ -71,7 +71,6 @@ async def put_task(
     notes: Optional[str] = Form(None),
     image: Optional[UploadFile] = File(None),
     ):
-    print('tasasdas dasd asdk')
 
     try:
         payload = Security.check_token(token)
