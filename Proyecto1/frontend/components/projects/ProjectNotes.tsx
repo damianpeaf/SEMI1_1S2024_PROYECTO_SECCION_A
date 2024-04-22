@@ -17,6 +17,7 @@ import { MiniLoader } from "../routes/Loader";
 import { TaskI } from "@/types/Project";
 import { TaskForm } from "./TaskForm";
 import { IoMdTrash } from "react-icons/io";
+import { BsTranslate } from "react-icons/bs";
 
 interface ProjectNotesI {
   projectId: string;
