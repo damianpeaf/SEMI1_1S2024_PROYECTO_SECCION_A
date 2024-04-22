@@ -30,6 +30,10 @@ class ProjectData(BaseModel):
     location: str
 
 
+class ProjectMember(BaseModel):
+    user_id: str
+    role_id: str
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter()
@@ -211,8 +215,11 @@ async def delete_project(project_id: int, token: str = Depends(oauth2_scheme)):
     return JSONResponse({"message": "Error deleting project", "status": 500}, 500)
 
 @router.post("/projects/{project_id}/members", response_model=dict, status_code=201)
-async def add_member_to_project(project_id: int, user_id: int, role_id: int, token: str = Depends(oauth2_scheme)):
+async def add_member_to_project(project_id: int,member: ProjectMember, token: str = Depends(oauth2_scheme)):
     try:
+        
+        role_id = member.role_id
+
         payload = Security.check_token(token)
         if payload is not None:
             user_id = payload["id"]
@@ -231,7 +238,8 @@ async def add_member_to_project(project_id: int, user_id: int, role_id: int, tok
                     },
                     401,
                 )
-
+            
+            user_id = member.user_id
             result_db = UserProjectModel.add_user_project(
                 UserProject(
                     user_id=user_id,

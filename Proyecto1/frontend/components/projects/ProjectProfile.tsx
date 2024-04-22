@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import { MiniLoader } from "../routes/Loader";
 import { ProjectForm } from "./ProjectForm";
 import { Button } from "@nextui-org/react";
-import { MdDelete } from "react-icons/md";
+import { MdAdd, MdDelete } from "react-icons/md";
 import { ProjectNotes } from "./ProjectNotes";
+import { AddMemberModal } from "./AddMemberModal";
 
 interface GetProjectInfoI {
   message: string;
@@ -26,7 +27,7 @@ interface Data {
   members: Member[];
 }
 
-interface Member {
+export interface Member {
   id: string;
   name: string;
   username: string;
@@ -37,6 +38,7 @@ export const ProjectProfile = () => {
   const router = useRouter();
   const params = useSearchParams();
   const id = params.get("id");
+  const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
   const apiInfo = useApi<GetProjectInfoI>({
     endpointPath: "project/projects",
     method: "GET",
@@ -105,7 +107,7 @@ export const ProjectProfile = () => {
 
   return (
     <div className="w-full flex flex-col items-center mt-4">
-      <div className="flex justify-end w-full">
+      <div className="flex justify-end w-full gap-x-2">
         <Button
           color="danger"
           className="text-white text-xl"
@@ -114,6 +116,21 @@ export const ProjectProfile = () => {
         >
           <MdDelete />
         </Button>
+        <Button
+          color="primary"
+          className="text-white text-sm"
+          onClick={() => setIsMembersModalOpen(true)}
+          size="sm"
+        >
+          <MdAdd /> Miembros
+        </Button>
+        <AddMemberModal
+          onGetMembers={getInfo}
+          isOpen={isMembersModalOpen}
+          onClose={() => setIsMembersModalOpen(false)}
+          projectId={id}
+          members={project.members}
+        />
       </div>
       <h2 className="text-2xl font-bold mb-5">{project.title}</h2>
       <ProjectForm
